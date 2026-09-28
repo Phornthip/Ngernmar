@@ -1737,13 +1737,13 @@
       });
     });
 
-    // 4. การแชร์และการใช้งาน LINE LIFF
-    document.getElementById("shareLineButton")?.addEventListener("click", () => {
-      //shareToLine(buildCustomerSummaryText());
+    // 4. การแชร์และการใช้งาน LINE LIFF    
+    document.getElementById("shareSummaryButton")?.addEventListener("click", async () => {
+      shareToLine(buildCustomerSummaryText());
     });
 
 // ปรับปรุง Event Listener สำหรับปุ่มแชร์
-document.getElementById("shareSummaryButton")?.addEventListener("click", async () => {
+document.getElementById("shareLineButton")?.addEventListener("click", () => {
   if (liffReady && liff.isApiAvailable("shareTargetPicker")) {
     if (!liff.isLoggedIn()) {
       liff.login({ redirectUri: window.location.href });
