@@ -1677,8 +1677,81 @@
 
     restoreEffectMode();
     setDefaultDates();
-    renderAll();
-    initLiff();
+    
+    // คัดลอกลิงก์
+      document.getElementById("copyLinkButton").addEventListener("click", () => {
+        const url = liffReady ? LIFF_URL : window.location.href;
+        navigator.clipboard.writeText(url)
+          .then(() => showAlert("คัดลอกลิงก์เรียบร้อยแล้ว"))
+          .catch(() => showAlert("ไม่สามารถคัดลอกลิงก์ได้", "error"));
+      });
+
+      // แชร์ไปยัง LINE
+      document.getElementById("shareLineButton").addEventListener("click", async () => {
+        const shareUrl = LIFF_URL;
+        if (liffReady && liff.isApiAvailable("shareTargetPicker")) {
+          try {
+            await liff.shareTargetPicker([{
+              type: "text",
+              text: `มหาจำเริญโกดัง - ตรวจสอบรายการสินค้าและจองพื้นที่ storage ได้ที่นี่:\n${shareUrl}`
+            }]);
+            showAlert("แชร์สำเร็จแล้ว");
+          } catch (err) {
+            console.error("Share error:", err);
+          }
+        } else {
+          window.open(`https://line.me/R/msg/text/?${encodeURIComponent("มหาจำเริญโกดัง: " + shareUrl)}`, "_blank");
+        }
+      });
+
+      // ส่งสรุปเข้า LINE
+      document.getElementById("shareSummaryButton").addEventListener("click", async () => {
+        const customer = data.customers.find(c => c.id === selectedCustomerId);
+        const customerReservations = data.reservations.filter(r => r.customerId === selectedCustomerId);
+
+        let msg = `📦 สรุปการจอง: ${customer ? customer.name : "ลูกค้า"}\n`;
+        customerReservations.forEach(r => {
+          const product = data.products.find(p => p.id === r.productId);
+          const status = getReservationStatus(r);
+          msg += `- ${product ? product.name : "สินค้า"}: ${r.quantity} ${product ? product.unit : ""} (${formatDate(r.startDate)} - ${formatDate(r.endDate)}) [${status.text}]\n`;
+        });
+
+        if (liffReady && liff.isLoggedIn() && liff.isInClient()) {
+          try {
+            await liff.sendMessages([{ type: "text", text: msg }]);
+            showAlert("ส่งสรุปการจองเข้า LINE เรียบร้อย");
+          } catch (e) {
+            showAlert("ไม่สามารถส่งข้อความได้", "error");
+          }
+        } else {
+          alert(msg);
+        }
+      });
+
+      // แชร์สต็อกเข้า LINE
+      document.getElementById("shareStockButton").addEventListener("click", async () => {
+        let msg = `🏭 รายงานสต็อกสินค้า มหาจำเริญโกดัง\n`;
+        data.products.forEach(p => {
+          const reserved = getCurrentReservedQuantity(p.id);
+          const available = Math.max(0, p.reservableStock - reserved);
+          msg += `- ${p.name}: พร้อมจอง ${available}/${p.reservableStock} ${p.unit}\n`;
+        });
+
+        if (liffReady && liff.isApiAvailable("shareTargetPicker")) {
+          try {
+            await liff.shareTargetPicker([{ type: "text", text: msg }]);
+            showAlert("แชร์รายงานสต็อกเรียบร้อย");
+          } catch (e) {
+            console.error("Share stock error", e);
+          }
+        } else {
+          alert(msg);
+        }
+      });
+
+      // เริ่มทำงาน
+      initLiff();
+      renderAll();
   </script>
 </body>
 </html>
