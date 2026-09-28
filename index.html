@@ -1185,6 +1185,73 @@
     }
   }
 
+  function buildCustomerSummaryText() {
+
+    const customer = data.customers.find(item => item.id === selectedCustomerId);
+
+    const reservations = data.reservations.filter(item => item.customerId === selectedCustomerId);
+
+    const lines = [];
+
+
+
+    lines.push("สรุปการจองโกดัง");
+
+    lines.push("ลูกค้า: " + (customer ? customer.name : "-"));
+
+    lines.push("ข้อมูล ณ วันที่ " + formatDate(todayText));
+
+    lines.push("");
+
+
+
+    if (reservations.length === 0) {
+
+      lines.push("ยังไม่มีรายการจอง");
+
+    } else {
+
+      reservations.forEach(reservation => {
+
+        const product = data.products.find(item => item.id === reservation.productId);
+
+        const status = getReservationStatus(reservation);
+
+        const remaining = getDaysRemaining(reservation.endDate);
+
+
+
+        let remainingText = "เหลือ " + remaining + " วัน";
+
+        if (remaining === 0) remainingText = "หมดอายุวันนี้";
+
+        if (remaining < 0) remainingText = "หมดอายุแล้ว";
+
+
+
+        lines.push("RSV-" + String(reservation.id).padStart(4, "0") + " " + (product ? product.name : "-"));
+
+        lines.push("จำนวน " + reservation.quantity + " " + (product ? product.unit : "") + " | " + status.text);
+
+        lines.push(formatDate(reservation.startDate) + " ถึง " + formatDate(reservation.endDate) + " | " + remainingText);
+
+        lines.push("");
+
+      });
+
+    }
+
+
+
+    lines.push("เปิดระบบเพื่อดูรายละเอียด");
+
+    lines.push(getShareLink());
+
+
+
+    return lines.join("\n");
+
+  }
   function buildCustomerSummaryFlex() {
   const customer = data.customers.find(item => item.id === selectedCustomerId);
   const reservations = data.reservations.filter(item => item.customerId === selectedCustomerId);
@@ -1704,7 +1771,9 @@ document.getElementById("shareSummaryButton")?.addEventListener("click", async (
       showAlert("แชร์ผ่าน LINE ไม่สำเร็จ", "error");
     }
   } else {
+    shareToLine(buildCustomerSummaryText());
   }
+  
 });
 
     document.getElementById("shareStockButton")?.addEventListener("click", () => {
