@@ -1738,12 +1738,12 @@
     });
 
     // 4. การแชร์และการใช้งาน LINE LIFF    
-    document.getElementById("shareSummaryButton")?.addEventListener("click", async () => {
+    document.getElementById("shareSummaryButton")?.addEventListener("click", () => {
       shareToLine(buildCustomerSummaryText());
     });
 
 // ปรับปรุง Event Listener สำหรับปุ่มแชร์
-document.getElementById("shareLineButton")?.addEventListener("click", () => {
+document.getElementById("shareLineButton")?.addEventListener("click", async () => {
   if (liffReady && liff.isApiAvailable("shareTargetPicker")) {
     if (!liff.isLoggedIn()) {
       liff.login({ redirectUri: window.location.href });
