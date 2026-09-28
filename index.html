@@ -1297,7 +1297,6 @@
       .map(customer => `<option value="${customer.id}">${customer.name}</option>`)
       .join("");
 
-    const custSelect = document.getElementById("customerSelect");
     const bookCust = document.getElementById("bookingCustomer");
 
     if (custSelect) {
@@ -1530,16 +1529,6 @@
         const targetView = button.dataset.view;
         document.getElementById(targetView)?.classList.add("active");
       });
-    });
-
-    // 3. เปลี่ยนแปลงตัวเลือกการจอง
-    document.getElementById("customerSelect")?.addEventListener("change", event => {
-      selectedCustomerId = Number(event.target.value);
-      renderCustomerDashboard();
-    });
-
-    ["bookingProduct", "bookingStart", "bookingEnd"].forEach(id => {
-      document.getElementById(id)?.addEventListener("change", updateAvailablePreview);
     });
 
     // 4. การแชร์และการใช้งาน LINE LIFF
