@@ -939,454 +939,413 @@
       </div>
     </section>
   </main>
+<script>
+  /* ===========================================
+     ตั้งค่า LIFF
+     =========================================== */
+  const LIFF_ID = "2011773702-rRi1WQNm";
+  const LIFF_URL = "https://liff.line.me/" + LIFF_ID;
 
-  <script>
-    /* ===========================================
-       ตั้งค่า LIFF
-       นำ LIFF ID จาก LINE Developers มาใส่ที่นี่
-       =========================================== */
-    const LIFF_ID = "2011773702-rRi1WQNm";
-    const LIFF_URL = "https://liff.line.me/" + LIFF_ID;
+  let liffReady = false;
+  let lineProfile = null;
 
-    let liffReady = false;
-    let lineProfile = null;
+  const STORAGE_KEY = "warehouse-booking-demo";
+  const EFFECT_KEY = "warehouse-booking-effect";
 
-    const STORAGE_KEY = "warehouse-booking-demo";
-    const EFFECT_KEY = "warehouse-booking-effect";
+  const addDays = (date, days) => {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result.toISOString().slice(0, 10);
+  };
 
-    const addDays = (date, days) => {
-      const result = new Date(date);
-      result.setDate(result.getDate() + days);
-      return result.toISOString().slice(0, 10);
-    };
+  const todayText = new Date().toISOString().slice(0, 10);
 
-    const todayText = new Date().toISOString().slice(0, 10);
-
-    const defaultData = {
-      customers: [
-        { id: 1, name: "บริษัท A" },
-        { id: 2, name: "บริษัท B" }
-      ],
-
-      products: [
-        {
-          id: 1,
-          name: "Box ขนาด L",
-          category: "กล่องสินค้า",
-          actualStock: 200,
-          reservableStock: 150,
-          unit: "กล่อง"
-        },
-        {
-          id: 2,
-          name: "Pallet",
-          category: "พาเลต",
-          actualStock: 100,
-          reservableStock: 80,
-          unit: "พาเลต"
-        },
-        {
-          id: 3,
-          name: "ตู้ควบคุมอุณหภูมิ",
-          category: "ห้องเย็น",
-          actualStock: 50,
-          reservableStock: 30,
-          unit: "ตู้"
-        }
-      ],
-
-      reservations: [
-        {
-          id: 1,
-          customerId: 1,
-          productId: 1,
-          quantity: 50,
-          startDate: addDays(todayText, -20),
-          endDate: addDays(todayText, 10),
-          status: "active"
-        },
-        {
-          id: 2,
-          customerId: 1,
-          productId: 2,
-          quantity: 20,
-          startDate: addDays(todayText, -10),
-          endDate: addDays(todayText, 5),
-          status: "active"
-        },
-        {
-          id: 3,
-          customerId: 2,
-          productId: 1,
-          quantity: 30,
-          startDate: addDays(todayText, 15),
-          endDate: addDays(todayText, 45),
-          status: "pending"
-        }
-      ]
-    };
-
-    let data = loadData();
-    let selectedCustomerId = 1;
-
-    function loadData() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-
-      if (saved) {
-        return JSON.parse(saved);
+  const defaultData = {
+    customers: [
+      { id: 1, name: "บริษัท A" },
+      { id: 2, name: "บริษัท B" }
+    ],
+    products: [
+      {
+        id: 1,
+        name: "Box ขนาด L",
+        category: "กล่องสินค้า",
+        actualStock: 200,
+        reservableStock: 150,
+        unit: "กล่อง"
+      },
+      {
+        id: 2,
+        name: "Pallet",
+        category: "พาเลต",
+        actualStock: 100,
+        reservableStock: 80,
+        unit: "พาเลต"
+      },
+      {
+        id: 3,
+        name: "ตู้ควบคุมอุณหภูมิ",
+        category: "ห้องเย็น",
+        actualStock: 50,
+        reservableStock: 30,
+        unit: "ตู้"
       }
-
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
-      return JSON.parse(JSON.stringify(defaultData));
-    }
-
-    function saveData() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
-
-    function formatDate(dateString) {
-      return new Intl.DateTimeFormat("th-TH", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
-      }).format(new Date(dateString));
-    }
-
-    function getDaysRemaining(endDate) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      const end = new Date(endDate);
-      end.setHours(0, 0, 0, 0);
-
-      return Math.ceil((end - today) / 86400000);
-    }
-
-    function getReservationStatus(reservation) {
-      if (reservation.status === "cancelled") {
-        return { code: "cancelled", text: "ยกเลิกแล้ว", className: "badge-expired" };
+    ],
+    reservations: [
+      {
+        id: 1,
+        customerId: 1,
+        productId: 1,
+        quantity: 50,
+        startDate: addDays(todayText, -20),
+        endDate: addDays(todayText, 10),
+        status: "active"
+      },
+      {
+        id: 2,
+        customerId: 1,
+        productId: 2,
+        quantity: 20,
+        startDate: addDays(todayText, -10),
+        endDate: addDays(todayText, 5),
+        status: "active"
+      },
+      {
+        id: 3,
+        customerId: 2,
+        productId: 1,
+        quantity: 30,
+        startDate: addDays(todayText, 15),
+        endDate: addDays(todayText, 45),
+        status: "pending"
       }
+    ]
+  };
 
-      const today = new Date(todayText);
-      const start = new Date(reservation.startDate);
-      const end = new Date(reservation.endDate);
-      const remaining = getDaysRemaining(reservation.endDate);
+  let data = loadData();
+  let selectedCustomerId = 1;
 
-      if (end < today) {
-        return { code: "expired", text: "หมดอายุ", className: "badge-expired" };
-      }
+  function loadData() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
+    return JSON.parse(JSON.stringify(defaultData));
+  }
 
-      if (start > today) {
-        return { code: "pending", text: "รอเริ่มใช้งาน", className: "badge-pending" };
-      }
+  function saveData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
 
-      if (remaining <= 7) {
-        return { code: "warning", text: "ใกล้หมดอายุ", className: "badge-warning" };
-      }
+  function formatDate(dateString) {
+    if (!dateString) return "-";
+    return new Intl.DateTimeFormat("th-TH", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    }).format(new Date(dateString));
+  }
 
-      return { code: "active", text: "ปกติ", className: "badge-normal" };
+  function getDaysRemaining(endDate) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const end = new Date(endDate);
+    end.setHours(0, 0, 0, 0);
+
+    return Math.ceil((end - today) / 86400000);
+  }
+
+  function getReservationStatus(reservation) {
+    if (reservation.status === "cancelled") {
+      return { code: "cancelled", text: "ยกเลิกแล้ว", className: "badge-expired" };
     }
 
-    function isOverlap(firstStart, firstEnd, secondStart, secondEnd) {
-      return firstStart <= secondEnd && firstEnd >= secondStart;
+    const today = new Date(todayText);
+    const start = new Date(reservation.startDate);
+    const end = new Date(reservation.endDate);
+    const remaining = getDaysRemaining(reservation.endDate);
+
+    if (end < today) {
+      return { code: "expired", text: "หมดอายุ", className: "badge-expired" };
+    }
+    if (start > today) {
+      return { code: "pending", text: "รอเริ่มใช้งาน", className: "badge-pending" };
+    }
+    if (remaining <= 7) {
+      return { code: "warning", text: "ใกล้หมดอายุ", className: "badge-warning" };
     }
 
-    function getReservedQuantity(productId, startDate, endDate) {
-      return data.reservations
-        .filter(reservation => {
-          const status = getReservationStatus(reservation);
+    return { code: "active", text: "ปกติ", className: "badge-normal" };
+  }
 
-          return (
-            reservation.productId === productId &&
-            !["expired", "cancelled"].includes(status.code) &&
-            isOverlap(reservation.startDate, reservation.endDate, startDate, endDate)
-          );
-        })
-        .reduce((total, reservation) => total + reservation.quantity, 0);
-    }
+  function isOverlap(firstStart, firstEnd, secondStart, secondEnd) {
+    return firstStart <= secondEnd && firstEnd >= secondStart;
+  }
 
-    function getCurrentReservedQuantity(productId) {
-      return data.reservations
-        .filter(reservation => {
-          const status = getReservationStatus(reservation);
+  function getReservedQuantity(productId, startDate, endDate) {
+    return data.reservations
+      .filter(reservation => {
+        const status = getReservationStatus(reservation);
+        return (
+          reservation.productId === productId &&
+          !["expired", "cancelled"].includes(status.code) &&
+          isOverlap(reservation.startDate, reservation.endDate, startDate, endDate)
+        );
+      })
+      .reduce((total, reservation) => total + reservation.quantity, 0);
+  }
 
-          return (
-            reservation.productId === productId &&
-            ["active", "warning"].includes(status.code)
-          );
-        })
-        .reduce((total, reservation) => total + reservation.quantity, 0);
-    }
+  function getCurrentReservedQuantity(productId) {
+    return data.reservations
+      .filter(reservation => {
+        const status = getReservationStatus(reservation);
+        return (
+          reservation.productId === productId &&
+          ["active", "warning"].includes(status.code)
+        );
+      })
+      .reduce((total, reservation) => total + reservation.quantity, 0);
+  }
 
-    function showAlert(message, type = "success") {
-      const alert = document.getElementById("globalAlert");
+  function showAlert(message, type = "success") {
+    const alert = document.getElementById("globalAlert");
+    if (!alert) return;
 
-      alert.textContent = message;
-      alert.className = "alert show " + (type === "error" ? "alert-error" : "alert-success");
+    alert.textContent = message;
+    alert.className = "alert show " + (type === "error" ? "alert-error" : "alert-success");
 
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
-      setTimeout(() => {
-        alert.className = "alert";
-      }, 4000);
-    }
+    setTimeout(() => {
+      alert.className = "alert";
+    }, 4000);
+  }
 
-    /* ===========================================
-       ส่วนของ LINE LIFF
-       =========================================== */
+  /* ===========================================
+     LINE LIFF Logic
+     =========================================== */
 
-    function setLineStatus(text, state = "") {
-      const element = document.getElementById("lineStatus");
-
+  function setLineStatus(text, state = "") {
+    const element = document.getElementById("lineStatus");
+    if (element) {
       element.textContent = text;
       element.className = "line-status " + state;
     }
+  }
 
-    function isLiffConfigured() {
-      return (
-        typeof liff !== "undefined" &&
-        LIFF_ID &&
-        !LIFF_ID.startsWith("2000000000")
-      );
+  function isLiffConfigured() {
+    return (
+      typeof liff !== "undefined" &&
+      LIFF_ID &&
+      !LIFF_ID.startsWith("2000000000")
+    );
+  }
+
+  async function initLiff() {
+    if (typeof liff === "undefined") {
+      setLineStatus("โหลด LIFF SDK ไม่สำเร็จ", "error");
+      return;
     }
 
-    async function initLiff() {
-      if (typeof liff === "undefined") {
-        setLineStatus("โหลด LIFF SDK ไม่สำเร็จ", "error");
-        return;
-      }
-
-      if (!isLiffConfigured()) {
-        setLineStatus("โหมดทดลอง ยังไม่ได้ตั้งค่า LIFF ID");
-        return;
-      }
-
-      try {
-        await liff.init({ liffId: LIFF_ID });
-        liffReady = true;
-
-        if (liff.isInClient()) {
-          document.getElementById("closeLiffButton").classList.remove("hidden");
-        }
-
-        if (liff.isLoggedIn()) {
-          lineProfile = await liff.getProfile();
-          setLineStatus("LINE: " + lineProfile.displayName, "connected");
-          matchCustomerByLineName(lineProfile.displayName);
-        } else {
-          setLineStatus("ยังไม่ได้เข้าสู่ระบบ LINE");
-        }
-      } catch (error) {
-        setLineStatus("เชื่อมต่อ LINE ไม่สำเร็จ", "error");
-        console.error("LIFF init error:", error);
-      }
+    if (!isLiffConfigured()) {
+      setLineStatus("โหมดทดลอง ยังไม่ได้ตั้งค่า LIFF ID");
+      return;
     }
 
-    function matchCustomerByLineName(displayName) {
-      const matched = data.customers.find(customer => customer.name === displayName);
+    try {
+      await liff.init({ liffId: LIFF_ID });
+      liffReady = true;
 
-      if (matched) {
-        selectedCustomerId = matched.id;
-        renderSelects();
-        renderCustomerDashboard();
+      const closeBtn = document.getElementById("closeLiffButton");
+      if (liff.isInClient() && closeBtn) {
+        closeBtn.classList.remove("hidden");
       }
-    }
 
-    function buildCustomerSummaryText() {
-      const customer = data.customers.find(item => item.id === selectedCustomerId);
-
-      const reservations = data.reservations.filter(
-        item => item.customerId === selectedCustomerId
-      );
-
-      const lines = [];
-
-      lines.push("สรุปการจองโกดัง");
-      lines.push("ลูกค้า: " + (customer ? customer.name : "-"));
-      lines.push("ข้อมูล ณ วันที่ " + formatDate(todayText));
-      lines.push("");
-
-      if (reservations.length === 0) {
-        lines.push("ยังไม่มีรายการจอง");
+      if (liff.isLoggedIn()) {
+        lineProfile = await liff.getProfile();
+        setLineStatus("LINE: " + lineProfile.displayName, "connected");
+        matchCustomerByLineName(lineProfile.displayName);
       } else {
-        reservations.forEach(reservation => {
-          const product = data.products.find(item => item.id === reservation.productId);
-          const status = getReservationStatus(reservation);
-          const remaining = getDaysRemaining(reservation.endDate);
-
-          let remainingText = "เหลือ " + remaining + " วัน";
-
-          if (remaining === 0) {
-            remainingText = "หมดอายุวันนี้";
-          }
-
-          if (remaining < 0) {
-            remainingText = "หมดอายุแล้ว";
-          }
-
-          lines.push(
-            "RSV-" + String(reservation.id).padStart(4, "0") +
-            " " + (product ? product.name : "-")
-          );
-
-          lines.push(
-            "จำนวน " + reservation.quantity +
-            " " + (product ? product.unit : "") +
-            " | " + status.text
-          );
-
-          lines.push(
-            formatDate(reservation.startDate) +
-            " ถึง " + formatDate(reservation.endDate) +
-            " | " + remainingText
-          );
-
-          lines.push("");
-        });
+        setLineStatus("ยังไม่ได้เข้าสู่ระบบ LINE");
       }
-
-      lines.push("เปิดระบบเพื่อดูรายละเอียด");
-      lines.push(getShareLink());
-
-      return lines.join("\n");
+    } catch (error) {
+      setLineStatus("เชื่อมต่อ LINE ไม่สำเร็จ", "error");
+      console.error("LIFF init error:", error);
     }
+  }
 
-    function buildStockSummaryText() {
-      const lines = [];
+  function matchCustomerByLineName(displayName) {
+    const matched = data.customers.find(customer => customer.name === displayName);
+    if (matched) {
+      selectedCustomerId = matched.id;
+      renderSelects();
+      renderCustomerDashboard();
+    }
+  }
 
-      lines.push("สรุปสต็อกโกดัง");
-      lines.push("ข้อมูล ณ วันที่ " + formatDate(todayText));
-      lines.push("");
+  function buildCustomerSummaryText() {
+    const customer = data.customers.find(item => item.id === selectedCustomerId);
+    const reservations = data.reservations.filter(item => item.customerId === selectedCustomerId);
+    const lines = [];
 
-      data.products.forEach(product => {
-        const reserved = getCurrentReservedQuantity(product.id);
-        const available = Math.max(product.reservableStock - reserved, 0);
+    lines.push("สรุปการจองโกดัง");
+    lines.push("ลูกค้า: " + (customer ? customer.name : "-"));
+    lines.push("ข้อมูล ณ วันที่ " + formatDate(todayText));
+    lines.push("");
 
-        lines.push(product.name);
-        lines.push(
-          "จริง " + product.actualStock +
-          " | เปิดจอง " + product.reservableStock +
-          " | จองแล้ว " + reserved +
-          " | พร้อมจอง " + available + " " + product.unit
-        );
+    if (reservations.length === 0) {
+      lines.push("ยังไม่มีรายการจอง");
+    } else {
+      reservations.forEach(reservation => {
+        const product = data.products.find(item => item.id === reservation.productId);
+        const status = getReservationStatus(reservation);
+        const remaining = getDaysRemaining(reservation.endDate);
+
+        let remainingText = "เหลือ " + remaining + " วัน";
+        if (remaining === 0) remainingText = "หมดอายุวันนี้";
+        if (remaining < 0) remainingText = "หมดอายุแล้ว";
+
+        lines.push("RSV-" + String(reservation.id).padStart(4, "0") + " " + (product ? product.name : "-"));
+        lines.push("จำนวน " + reservation.quantity + " " + (product ? product.unit : "") + " | " + status.text);
+        lines.push(formatDate(reservation.startDate) + " ถึง " + formatDate(reservation.endDate) + " | " + remainingText);
         lines.push("");
       });
-
-      lines.push("เปิดระบบเพื่อดูรายละเอียด");
-      lines.push(getShareLink());
-
-      return lines.join("\n");
     }
 
-    function getShareLink() {
-      if (isLiffConfigured()) {
-        return LIFF_URL;
-      }
+    lines.push("เปิดระบบเพื่อดูรายละเอียด");
+    lines.push(getShareLink());
 
-      if (window.location.protocol.startsWith("http")) {
-        return window.location.href;
-      }
+    return lines.join("\n");
+  }
 
-      return "ยังไม่ได้อัปโหลดเว็บขึ้นออนไลน์";
-    }
+  function buildStockSummaryText() {
+    const lines = [];
+    lines.push("สรุปสต็อกโกดัง");
+    lines.push("ข้อมูล ณ วันที่ " + formatDate(todayText));
+    lines.push("");
 
-    async function shareToLine(message) {
-      if (liffReady && liff.isApiAvailable("shareTargetPicker")) {
-        if (!liff.isLoggedIn()) {
-          liff.login({ redirectUri: window.location.href });
-          return;
-        }
+    data.products.forEach(product => {
+      const reserved = getCurrentReservedQuantity(product.id);
+      const available = Math.max(product.reservableStock - reserved, 0);
 
-        try {
-          const result = await liff.shareTargetPicker([{ type: "text", text: message }]);
+      lines.push(product.name);
+      lines.push(
+        "จริง " + product.actualStock +
+        " | เปิดจอง " + product.reservableStock +
+        " | จองแล้ว " + reserved +
+        " | พร้อมจอง " + available + " " + product.unit
+      );
+      lines.push("");
+    });
 
-          if (result) {
-            showAlert("ส่งข้อมูลเข้า LINE เรียบร้อยแล้ว");
-          } else {
-            showAlert("ยกเลิกการแชร์");
-          }
-        } catch (error) {
-          console.error("shareTargetPicker error:", error);
-          showAlert("แชร์ผ่าน LINE ไม่สำเร็จ", "error");
-        }
+    lines.push("เปิดระบบเพื่อดูรายละเอียด");
+    lines.push(getShareLink());
 
+    return lines.join("\n");
+  }
+
+  function getShareLink() {
+    if (isLiffConfigured()) return LIFF_URL;
+    if (window.location.protocol.startsWith("http")) return window.location.href;
+    return "ยังไม่ได้อัปโหลดเว็บขึ้นออนไลน์";
+  }
+
+  async function shareToLine(message) {
+    if (liffReady && liff.isApiAvailable("shareTargetPicker")) {
+      if (!liff.isLoggedIn()) {
+        liff.login({ redirectUri: window.location.href });
         return;
       }
 
-      const shareUrl = "https://line.me/R/msg/text/?" + encodeURIComponent(message);
-
-      window.open(shareUrl, "_blank");
-      showAlert("เปิดหน้าต่างแชร์ของ LINE แล้ว");
-    }
-
-    async function copyShareLink() {
-      const link = getShareLink();
-
       try {
-        await navigator.clipboard.writeText(link);
-        showAlert("คัดลอกลิงก์เรียบร้อย: " + link);
+        const result = await liff.shareTargetPicker([{ type: "text", text: message }]);
+        if (result) {
+          showAlert("ส่งข้อมูลเข้า LINE เรียบร้อยแล้ว");
+        } else {
+          showAlert("ยกเลิกการแชร์");
+        }
       } catch (error) {
-        window.prompt("คัดลอกลิงก์นี้เพื่อส่งให้ลูกค้า", link);
+        console.error("shareTargetPicker error:", error);
+        showAlert("แชร์ผ่าน LINE ไม่สำเร็จ", "error");
       }
+      return;
     }
 
-    /* ===========================================
-       ส่วนแสดงผลหน้าเว็บ
-       =========================================== */
+    const shareUrl = "https://line.me/R/msg/text/?" + encodeURIComponent(message);
+    window.open(shareUrl, "_blank");
+    showAlert("เปิดหน้าต่างแชร์ของ LINE แล้ว");
+  }
 
-    function renderSelects() {
-      const customerOptions = data.customers
-        .map(customer => `<option value="${customer.id}">${customer.name}</option>`)
-        .join("");
+  async function copyShareLink() {
+    const link = getShareLink();
+    try {
+      await navigator.clipboard.writeText(link);
+      showAlert("คัดลอกลิงก์เรียบร้อย: " + link);
+    } catch (error) {
+      window.prompt("คัดลอกลิงก์นี้เพื่อส่งให้ลูกค้า", link);
+    }
+  }
 
-      document.getElementById("customerSelect").innerHTML = customerOptions;
-      document.getElementById("bookingCustomer").innerHTML = customerOptions;
-      document.getElementById("customerSelect").value = selectedCustomerId;
+  /* ===========================================
+     Render Views
+     =========================================== */
 
-      const productOptions = data.products
-        .map(product => `<option value="${product.id}">${product.name}</option>`)
-        .join("");
+  function renderSelects() {
+    const customerOptions = data.customers
+      .map(customer => `<option value="${customer.id}">${customer.name}</option>`)
+      .join("");
 
-      document.getElementById("bookingProduct").innerHTML = productOptions;
+    const custSelect = document.getElementById("customerSelect");
+    const bookCust = document.getElementById("bookingCustomer");
+
+    if (custSelect) {
+      custSelect.innerHTML = customerOptions;
+      custSelect.value = selectedCustomerId;
+    }
+    if (bookCust) {
+      bookCust.innerHTML = customerOptions;
     }
 
-    function renderCustomerDashboard() {
-      const customer = data.customers.find(item => item.id === selectedCustomerId);
+    const productOptions = data.products
+      .map(product => `<option value="${product.id}">${product.name}</option>`)
+      .join("");
 
-      const reservations = data.reservations.filter(
-        item => item.customerId === selectedCustomerId
-      );
+    const bookProd = document.getElementById("bookingProduct");
+    if (bookProd) {
+      bookProd.innerHTML = productOptions;
+    }
+  }
 
-      let activeCount = 0;
-      let warningCount = 0;
-      let expiredCount = 0;
-      let reservedTotal = 0;
+  function renderCustomerDashboard() {
+    const customer = data.customers.find(item => item.id === selectedCustomerId);
+    const reservations = data.reservations.filter(item => item.customerId === selectedCustomerId);
 
-      reservations.forEach(reservation => {
-        const status = getReservationStatus(reservation);
+    let activeCount = 0;
+    let warningCount = 0;
+    let expiredCount = 0;
+    let reservedTotal = 0;
 
-        if (["active", "warning"].includes(status.code)) {
-          activeCount++;
-          reservedTotal += reservation.quantity;
-        }
+    reservations.forEach(reservation => {
+      const status = getReservationStatus(reservation);
 
-        if (status.code === "warning") {
-          warningCount++;
-        }
+      if (["active", "warning"].includes(status.code)) {
+        activeCount++;
+        reservedTotal += reservation.quantity;
+      }
+      if (status.code === "warning") warningCount++;
+      if (status.code === "expired") expiredCount++;
+    });
 
-        if (status.code === "expired") {
-          expiredCount++;
-        }
-      });
+    if (document.getElementById("activeCount")) document.getElementById("activeCount").textContent = activeCount;
+    if (document.getElementById("reservedTotal")) document.getElementById("reservedTotal").textContent = reservedTotal;
+    if (document.getElementById("warningCount")) document.getElementById("warningCount").textContent = warningCount;
+    if (document.getElementById("expiredCount")) document.getElementById("expiredCount").textContent = expiredCount;
+    if (document.getElementById("customerNameLabel")) document.getElementById("customerNameLabel").textContent = customer ? customer.name : "-";
 
-      document.getElementById("activeCount").textContent = activeCount;
-      document.getElementById("reservedTotal").textContent = reservedTotal;
-      document.getElementById("warningCount").textContent = warningCount;
-      document.getElementById("expiredCount").textContent = expiredCount;
-      document.getElementById("customerNameLabel").textContent = customer ? customer.name : "-";
-
-      const notice = document.getElementById("customerNotice");
-
+    const notice = document.getElementById("customerNotice");
+    if (notice) {
       if (warningCount > 0) {
         notice.innerHTML = `
           <div class="notice">
@@ -1397,200 +1356,234 @@
       } else {
         notice.innerHTML = "";
       }
-
-      const rows = reservations
-        .map(reservation => {
-          const product = data.products.find(item => item.id === reservation.productId);
-          const status = getReservationStatus(reservation);
-          const remaining = getDaysRemaining(reservation.endDate);
-
-          let remainingText = `${remaining} วัน`;
-
-          if (remaining === 0) {
-            remainingText = "หมดอายุวันนี้";
-          }
-
-          if (remaining < 0) {
-            remainingText = "หมดอายุแล้ว";
-          }
-
-          return `
-            <tr>
-              <td>RSV-${String(reservation.id).padStart(4, "0")}</td>
-              <td>${product ? product.name : "-"}</td>
-              <td>${reservation.quantity}</td>
-              <td>${formatDate(reservation.startDate)}</td>
-              <td>${formatDate(reservation.endDate)}</td>
-              <td>${remainingText}</td>
-              <td><span class="badge ${status.className}">${status.text}</span></td>
-            </tr>
-          `;
-        })
-        .join("");
-
-      document.getElementById("customerReservationRows").innerHTML =
-        rows || `<tr><td colspan="7" class="empty">ไม่พบรายการจอง</td></tr>`;
     }
 
-    function renderAdminDashboard() {
-      let totalActual = 0;
-      let totalReserved = 0;
-      let totalAvailable = 0;
+    const rows = reservations
+      .map(reservation => {
+        const product = data.products.find(item => item.id === reservation.productId);
+        const status = getReservationStatus(reservation);
+        const remaining = getDaysRemaining(reservation.endDate);
 
-      const productRows = data.products
-        .map(product => {
-          const reserved = getCurrentReservedQuantity(product.id);
-          const available = Math.max(product.reservableStock - reserved, 0);
+        let remainingText = `${remaining} วัน`;
+        if (remaining === 0) remainingText = "หมดอายุวันนี้";
+        if (remaining < 0) remainingText = "หมดอายุแล้ว";
 
-          totalActual += product.actualStock;
-          totalReserved += reserved;
-          totalAvailable += available;
+        return `
+          <tr>
+            <td>RSV-${String(reservation.id).padStart(4, "0")}</td>
+            <td>${product ? product.name : "-"}</td>
+            <td>${reservation.quantity}</td>
+            <td>${formatDate(reservation.startDate)}</td>
+            <td>${formatDate(reservation.endDate)}</td>
+            <td>${remainingText}</td>
+            <td><span class="badge ${status.className}">${status.text}</span></td>
+          </tr>
+        `;
+      })
+      .join("");
 
-          const availableClass =
-            available <= product.reservableStock * 0.1 ? "stock-low" : "";
+    const custRows = document.getElementById("customerReservationRows");
+    if (custRows) {
+      custRows.innerHTML = rows || `<tr><td colspan="7" class="empty">ไม่พบรายการจอง</td></tr>`;
+    }
+  }
 
-          return `
-            <tr>
-              <td>${product.name}</td>
-              <td>${product.category}</td>
-              <td>${product.actualStock}</td>
-              <td>${product.reservableStock}</td>
-              <td>${reserved}</td>
-              <td class="${availableClass}">${available}</td>
-              <td>${product.unit}</td>
-            </tr>
-          `;
-        })
-        .join("");
+  function renderAdminDashboard() {
+    let totalActual = 0;
+    let totalReserved = 0;
+    let totalAvailable = 0;
 
-      document.getElementById("productRows").innerHTML = productRows;
-      document.getElementById("productCount").textContent = data.products.length;
-      document.getElementById("actualStockTotal").textContent = totalActual;
-      document.getElementById("currentReservedTotal").textContent = totalReserved;
-      document.getElementById("availableTotal").textContent = totalAvailable;
+    const productRowsData = data.products
+      .map(product => {
+        const reserved = getCurrentReservedQuantity(product.id);
+        const available = Math.max(product.reservableStock - reserved, 0);
 
-      const reservationRows = [...data.reservations]
-        .sort((a, b) => b.id - a.id)
-        .map(reservation => {
-          const customer = data.customers.find(item => item.id === reservation.customerId);
-          const product = data.products.find(item => item.id === reservation.productId);
-          const status = getReservationStatus(reservation);
+        totalActual += product.actualStock;
+        totalReserved += reserved;
+        totalAvailable += available;
 
-          return `
-            <tr>
-              <td>RSV-${String(reservation.id).padStart(4, "0")}</td>
-              <td>${customer ? customer.name : "-"}</td>
-              <td>${product ? product.name : "-"}</td>
-              <td>${reservation.quantity}</td>
-              <td>${formatDate(reservation.startDate)} ถึง ${formatDate(reservation.endDate)}</td>
-              <td><span class="badge ${status.className}">${status.text}</span></td>
-            </tr>
-          `;
-        })
-        .join("");
+        const availableClass = available <= product.reservableStock * 0.1 ? "stock-low" : "";
 
-      document.getElementById("adminReservationRows").innerHTML =
-        reservationRows || `<tr><td colspan="6" class="empty">ไม่พบรายการจอง</td></tr>`;
+        return `
+          <tr>
+            <td>${product.name}</td>
+            <td>${product.category}</td>
+            <td>${product.actualStock}</td>
+            <td>${product.reservableStock}</td>
+            <td>${reserved}</td>
+            <td class="${availableClass}">${available}</td>
+            <td>${product.unit}</td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    const productRows = document.getElementById("productRows");
+    if (productRows) productRows.innerHTML = productRowsData;
+
+    if (document.getElementById("productCount")) document.getElementById("productCount").textContent = data.products.length;
+    if (document.getElementById("actualStockTotal")) document.getElementById("actualStockTotal").textContent = totalActual;
+    if (document.getElementById("currentReservedTotal")) document.getElementById("currentReservedTotal").textContent = totalReserved;
+    if (document.getElementById("availableTotal")) document.getElementById("availableTotal").textContent = totalAvailable;
+
+    const reservationRows = [...data.reservations]
+      .sort((a, b) => b.id - a.id)
+      .map(reservation => {
+        const customer = data.customers.find(item => item.id === reservation.customerId);
+        const product = data.products.find(item => item.id === reservation.productId);
+        const status = getReservationStatus(reservation);
+
+        return `
+          <tr>
+            <td>RSV-${String(reservation.id).padStart(4, "0")}</td>
+            <td>${customer ? customer.name : "-"}</td>
+            <td>${product ? product.name : "-"}</td>
+            <td>${reservation.quantity}</td>
+            <td>${formatDate(reservation.startDate)} ถึง ${formatDate(reservation.endDate)}</td>
+            <td><span class="badge ${status.className}">${status.text}</span></td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    const adminRows = document.getElementById("adminReservationRows");
+    if (adminRows) {
+      adminRows.innerHTML = reservationRows || `<tr><td colspan="6" class="empty">ไม่พบรายการจอง</td></tr>`;
+    }
+  }
+
+  function updateAvailablePreview() {
+    const prodEl = document.getElementById("bookingProduct");
+    const startEl = document.getElementById("bookingStart");
+    const endEl = document.getElementById("bookingEnd");
+    const output = document.getElementById("availablePreview");
+
+    if (!prodEl || !startEl || !endEl || !output) return;
+
+    const productId = Number(prodEl.value);
+    const startDate = startEl.value;
+    const endDate = endEl.value;
+
+    const product = data.products.find(item => item.id === productId);
+
+    if (!product || !startDate || !endDate) {
+      output.value = "-";
+      return;
     }
 
-    function updateAvailablePreview() {
-      const productId = Number(document.getElementById("bookingProduct").value);
-      const startDate = document.getElementById("bookingStart").value;
-      const endDate = document.getElementById("bookingEnd").value;
-
-      const output = document.getElementById("availablePreview");
-      const product = data.products.find(item => item.id === productId);
-
-      if (!product || !startDate || !endDate) {
-        output.value = "-";
-        return;
-      }
-
-      if (endDate < startDate) {
-        output.value = "วันที่ไม่ถูกต้อง";
-        return;
-      }
-
-      const reserved = getReservedQuantity(productId, startDate, endDate);
-      const available = Math.max(product.reservableStock - reserved, 0);
-
-      output.value = `${available} ${product.unit}`;
+    if (endDate < startDate) {
+      output.value = "วันที่ไม่ถูกต้อง";
+      return;
     }
 
-    function renderAll() {
-      renderSelects();
-      renderCustomerDashboard();
-      renderAdminDashboard();
-      updateAvailablePreview();
+    const reserved = getReservedQuantity(productId, startDate, endDate);
+    const available = Math.max(product.reservableStock - reserved, 0);
+
+    output.value = `${available} ${product.unit}`;
+  }
+
+  function renderAll() {
+    renderSelects();
+    renderCustomerDashboard();
+    renderAdminDashboard();
+    updateAvailablePreview();
+  }
+
+  function setDefaultDates() {
+    const startInput = document.getElementById("bookingStart");
+    const endInput = document.getElementById("bookingEnd");
+
+    if (startInput) {
+      startInput.value = todayText;
+      startInput.min = todayText;
     }
+    if (endInput) {
+      endInput.value = addDays(todayText, 30);
+      endInput.min = todayText;
+    }
+  }
 
-    /* ===========================================
-       การเชื่อมต่อเหตุการณ์
-       =========================================== */
+  function restoreEffectMode() {
+    const toggleBtn = document.getElementById("effectToggle");
+    if (localStorage.getItem(EFFECT_KEY) === "off") {
+      document.body.classList.add("plain-mode");
+      if (toggleBtn) toggleBtn.textContent = "เปิดเอฟเฟกต์";
+    }
+  }
 
+  /* ===========================================
+     Event Listeners (รันหลังจาก DOM โหลดเสร็จเท่านั้น)
+     =========================================== */
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // 1. ตั้งค่าพื้นฐาน
+    restoreEffectMode();
+    setDefaultDates();
+
+    // 2. การสลับแท็บ หน้าเว็บ
     document.querySelectorAll(".tab-button").forEach(button => {
-      button.addEventListener("click", () => {
-        document.querySelectorAll(".tab-button").forEach(item => {
-          item.classList.remove("active");
-        });
-
-        document.querySelectorAll(".view").forEach(view => {
-          view.classList.remove("active");
-        });
+      button?.addEventListener("click", () => {
+        document.querySelectorAll(".tab-button").forEach(item => item.classList.remove("active"));
+        document.querySelectorAll(".view").forEach(view => view.classList.remove("active"));
 
         button.classList.add("active");
-        document.getElementById(button.dataset.view).classList.add("active");
+        const targetView = button.dataset.view;
+        document.getElementById(targetView)?.classList.add("active");
       });
     });
 
-    document.getElementById("customerSelect").addEventListener("change", event => {
+    // 3. เปลี่ยนแปลงตัวเลือกการจอง
+    document.getElementById("customerSelect")?.addEventListener("change", event => {
       selectedCustomerId = Number(event.target.value);
       renderCustomerDashboard();
     });
 
     ["bookingProduct", "bookingStart", "bookingEnd"].forEach(id => {
-      document.getElementById(id).addEventListener("change", updateAvailablePreview);
+      document.getElementById(id)?.addEventListener("change", updateAvailablePreview);
     });
 
-    document.getElementById("shareLineButton").addEventListener("click", () => {
+    // 4. การแชร์และการใช้งาน LINE LIFF
+    document.getElementById("shareLineButton")?.addEventListener("click", () => {
       shareToLine(buildCustomerSummaryText());
     });
 
-    document.getElementById("shareSummaryButton").addEventListener("click", () => {
+    document.getElementById("shareSummaryButton")?.addEventListener("click", () => {
       shareToLine(buildCustomerSummaryText());
     });
 
-    document.getElementById("shareStockButton").addEventListener("click", () => {
+    document.getElementById("shareStockButton")?.addEventListener("click", () => {
       shareToLine(buildStockSummaryText());
     });
 
-    document.getElementById("copyLinkButton").addEventListener("click", copyShareLink);
+    document.getElementById("copyLinkButton")?.addEventListener("click", copyShareLink);
 
-    document.getElementById("closeLiffButton").addEventListener("click", () => {
+    document.getElementById("closeLiffButton")?.addEventListener("click", () => {
       if (liffReady && liff.isInClient()) {
         liff.closeWindow();
       }
     });
 
-    document.getElementById("effectToggle").addEventListener("click", () => {
+    // 5. ปุ่มสลับเอฟเฟกต์
+    document.getElementById("effectToggle")?.addEventListener("click", () => {
       document.body.classList.toggle("plain-mode");
-
       const isPlain = document.body.classList.contains("plain-mode");
+      const toggleBtn = document.getElementById("effectToggle");
 
-      document.getElementById("effectToggle").textContent =
-        isPlain ? "เปิดเอฟเฟกต์" : "ปิดเอฟเฟกต์";
-
+      if (toggleBtn) {
+        toggleBtn.textContent = isPlain ? "เปิดเอฟเฟกต์" : "ปิดเอฟเฟกต์";
+      }
       localStorage.setItem(EFFECT_KEY, isPlain ? "off" : "on");
     });
 
-    document.getElementById("reservationForm").addEventListener("submit", event => {
+    // 6. บันทึกการจอง
+    document.getElementById("reservationForm")?.addEventListener("submit", event => {
       event.preventDefault();
 
-      const customerId = Number(document.getElementById("bookingCustomer").value);
-      const productId = Number(document.getElementById("bookingProduct").value);
-      const quantity = Number(document.getElementById("bookingQuantity").value);
-      const startDate = document.getElementById("bookingStart").value;
-      const endDate = document.getElementById("bookingEnd").value;
+      const customerId = Number(document.getElementById("bookingCustomer")?.value);
+      const productId = Number(document.getElementById("bookingProduct")?.value);
+      const quantity = Number(document.getElementById("bookingQuantity")?.value);
+      const startDate = document.getElementById("bookingStart")?.value;
+      const endDate = document.getElementById("bookingEnd")?.value;
 
       const product = data.products.find(item => item.id === productId);
 
@@ -1613,18 +1606,11 @@
       const available = product.reservableStock - alreadyReserved;
 
       if (quantity > available) {
-        showAlert(
-          `จำนวนไม่เพียงพอ สามารถจองได้สูงสุด ${available} ${product.unit}`,
-          "error"
-        );
+        showAlert(`จำนวนไม่เพียงพอ สามารถจองได้สูงสุด ${available} ${product.unit}`, "error");
         return;
       }
 
-      const newId =
-        data.reservations.length > 0
-          ? Math.max(...data.reservations.map(item => item.id)) + 1
-          : 1;
-
+      const newId = data.reservations.length > 0 ? Math.max(...data.reservations.map(item => item.id)) + 1 : 1;
       const initialStatus = startDate > todayText ? "pending" : "active";
 
       data.reservations.push({
@@ -1640,118 +1626,29 @@
       saveData();
       renderAll();
 
-      document.getElementById("bookingQuantity").value = "";
+      const qtyInput = document.getElementById("bookingQuantity");
+      if (qtyInput) qtyInput.value = "";
 
       showAlert(`บันทึกการจอง RSV-${String(newId).padStart(4, "0")} สำเร็จ`);
     });
 
-    document.getElementById("resetDataButton").addEventListener("click", () => {
-      const confirmed = confirm("ต้องการล้างข้อมูลและคืนค่าข้อมูลทดลองหรือไม่?");
+    // 7. ปุ่มรีเซ็ตข้อมูล
+    document.getElementById("resetDataButton")?.addEventListener("click", () => {
+      if (confirm("ต้องการล้างข้อมูลและคืนค่าข้อมูลทดลองหรือไม่?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        data = loadData();
+        selectedCustomerId = 1;
 
-      if (!confirmed) {
-        return;
+        setDefaultDates();
+        renderAll();
+        showAlert("คืนค่าข้อมูลทดลองเรียบร้อยแล้ว");
       }
-
-      localStorage.removeItem(STORAGE_KEY);
-      data = loadData();
-      selectedCustomerId = 1;
-
-      setDefaultDates();
-      renderAll();
-      showAlert("คืนค่าข้อมูลทดลองเรียบร้อยแล้ว");
     });
 
-    function setDefaultDates() {
-      document.getElementById("bookingStart").value = todayText;
-      document.getElementById("bookingEnd").value = addDays(todayText, 30);
-      document.getElementById("bookingStart").min = todayText;
-      document.getElementById("bookingEnd").min = todayText;
-    }
-
-    function restoreEffectMode() {
-      if (localStorage.getItem(EFFECT_KEY) === "off") {
-        document.body.classList.add("plain-mode");
-        document.getElementById("effectToggle").textContent = "เปิดเอฟเฟกต์";
-      }
-    }
-
-    restoreEffectMode();
-    setDefaultDates();
-    
-    // คัดลอกลิงก์
-      document.getElementById("copyLinkButton").addEventListener("click", () => {
-        const url = liffReady ? LIFF_URL : window.location.href;
-        navigator.clipboard.writeText(url)
-          .then(() => showAlert("คัดลอกลิงก์เรียบร้อยแล้ว"))
-          .catch(() => showAlert("ไม่สามารถคัดลอกลิงก์ได้", "error"));
-      });
-
-      // แชร์ไปยัง LINE
-      document.getElementById("shareLineButton").addEventListener("click", async () => {
-        const shareUrl = LIFF_URL;
-        if (liffReady && liff.isApiAvailable("shareTargetPicker")) {
-          try {
-            await liff.shareTargetPicker([{
-              type: "text",
-              text: `มหาจำเริญโกดัง - ตรวจสอบรายการสินค้าและจองพื้นที่ storage ได้ที่นี่:\n${shareUrl}`
-            }]);
-            showAlert("แชร์สำเร็จแล้ว");
-          } catch (err) {
-            console.error("Share error:", err);
-          }
-        } else {
-          window.open(`https://line.me/R/msg/text/?${encodeURIComponent("มหาจำเริญโกดัง: " + shareUrl)}`, "_blank");
-        }
-      });
-
-      // ส่งสรุปเข้า LINE
-      document.getElementById("shareSummaryButton").addEventListener("click", async () => {
-        const customer = data.customers.find(c => c.id === selectedCustomerId);
-        const customerReservations = data.reservations.filter(r => r.customerId === selectedCustomerId);
-
-        let msg = `📦 สรุปการจอง: ${customer ? customer.name : "ลูกค้า"}\n`;
-        customerReservations.forEach(r => {
-          const product = data.products.find(p => p.id === r.productId);
-          const status = getReservationStatus(r);
-          msg += `- ${product ? product.name : "สินค้า"}: ${r.quantity} ${product ? product.unit : ""} (${formatDate(r.startDate)} - ${formatDate(r.endDate)}) [${status.text}]\n`;
-        });
-
-        if (liffReady && liff.isLoggedIn() && liff.isInClient()) {
-          try {
-            await liff.sendMessages([{ type: "text", text: msg }]);
-            showAlert("ส่งสรุปการจองเข้า LINE เรียบร้อย");
-          } catch (e) {
-            showAlert("ไม่สามารถส่งข้อความได้", "error");
-          }
-        } else {
-          alert(msg);
-        }
-      });
-
-      // แชร์สต็อกเข้า LINE
-      document.getElementById("shareStockButton").addEventListener("click", async () => {
-        let msg = `🏭 รายงานสต็อกสินค้า มหาจำเริญโกดัง\n`;
-        data.products.forEach(p => {
-          const reserved = getCurrentReservedQuantity(p.id);
-          const available = Math.max(0, p.reservableStock - reserved);
-          msg += `- ${p.name}: พร้อมจอง ${available}/${p.reservableStock} ${p.unit}\n`;
-        });
-
-        if (liffReady && liff.isApiAvailable("shareTargetPicker")) {
-          try {
-            await liff.shareTargetPicker([{ type: "text", text: msg }]);
-            showAlert("แชร์รายงานสต็อกเรียบร้อย");
-          } catch (e) {
-            console.error("Share stock error", e);
-          }
-        } else {
-          alert(msg);
-        }
-      });
-
-      // เริ่มทำงาน
-      initLiff();
-      renderAll();
-  </script>
-</body>
+    // 8. เริ่มต้นการทำงาน LIFF และแสดงผล UI ทั้งหมด
+    initLiff();
+    renderAll();
+  });
+</script>
+ </body>
 </html>
