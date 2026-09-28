@@ -1185,40 +1185,185 @@
     }
   }
 
-  function buildCustomerSummaryText() {
-    const customer = data.customers.find(item => item.id === selectedCustomerId);
-    const reservations = data.reservations.filter(item => item.customerId === selectedCustomerId);
-    const lines = [];
+  function buildCustomerSummaryFlex() {
+  const customer = data.customers.find(item => item.id === selectedCustomerId);
+  const reservations = data.reservations.filter(item => item.customerId === selectedCustomerId);
 
-    lines.push("สรุปการจองโกดัง");
-    lines.push("ลูกค้า: " + (customer ? customer.name : "-"));
-    lines.push("ข้อมูล ณ วันที่ " + formatDate(todayText));
-    lines.push("");
-
-    if (reservations.length === 0) {
-      lines.push("ยังไม่มีรายการจอง");
-    } else {
-      reservations.forEach(reservation => {
-        const product = data.products.find(item => item.id === reservation.productId);
-        const status = getReservationStatus(reservation);
-        const remaining = getDaysRemaining(reservation.endDate);
-
-        let remainingText = "เหลือ " + remaining + " วัน";
-        if (remaining === 0) remainingText = "หมดอายุวันนี้";
-        if (remaining < 0) remainingText = "หมดอายุแล้ว";
-
-        lines.push("RSV-" + String(reservation.id).padStart(4, "0") + " " + (product ? product.name : "-"));
-        lines.push("จำนวน " + reservation.quantity + " " + (product ? product.unit : "") + " | " + status.text);
-        lines.push(formatDate(reservation.startDate) + " ถึง " + formatDate(reservation.endDate) + " | " + remainingText);
-        lines.push("");
-      });
+  // สร้างเนื้อหารายการจองแต่ละรายการ
+  const reservationCards = reservations.length === 0 ? [
+    {
+      type: "text",
+      text: "ยังไม่มีรายการจอง",
+      color: "#94a3b8",
+      align: "center",
+      margin: "md"
     }
+  ] : reservations.map(reservation => {
+    const product = data.products.find(item => item.id === reservation.productId);
+    const status = getReservationStatus(reservation);
+    const remaining = getDaysRemaining(reservation.endDate);
 
-    lines.push("เปิดระบบเพื่อดูรายละเอียด");
-    lines.push(getShareLink());
+    let remainingText = `เหลือ ${remaining} วัน`;
+    if (remaining === 0) remainingText = "หมดอายุวันนี้";
+    if (remaining < 0) remainingText = "หมดอายุแล้ว";
 
-    return lines.join("\n");
-  }
+    // สี Badge ตามสถานะ
+    let badgeBg = "#22c55e"; // ปกติ (เขียว)
+    if (status.code === "warning") badgeBg = "#f59e0b"; // ใกล้หมดอายุ (ส้ม)
+    if (status.code === "pending") badgeBg = "#3b82f6"; // รอเริ่มใช้งาน (ฟ้า)
+    if (["expired", "cancelled"].includes(status.code)) badgeBg = "#ef4444"; // หมดอายุ/ยกเลิก (แดง)
+
+    return {
+      type: "box",
+      layout: "vertical",
+      backgroundColor: "#f8fafc",
+      cornerRadius: "8px",
+      paddingAll: "12px",
+      margin: "md",
+      contents: [
+        {
+          type: "box",
+          layout: "horizontal",
+          contents: [
+            {
+              type: "text",
+              text: `RSV-${String(reservation.id).padStart(4, "0")}`,
+              weight: "bold",
+              size: "xs",
+              color: "#64748b",
+              gravity: "center"
+            },
+            {
+              type: "box",
+              layout: "vertical",
+              backgroundColor: badgeBg,
+              cornerRadius: "4px",
+              paddingStart: "6px",
+              paddingEnd: "6px",
+              paddingTop: "2px",
+              paddingBottom: "2px",
+              contents: [
+                {
+                  type: "text",
+                  text: status.text,
+                  size: "xxs",
+                  color: "#ffffff",
+                  weight: "bold"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: "text",
+          text: product ? product.name : "-",
+          weight: "bold",
+          size: "md",
+          color: "#0f172a",
+          margin: "sm"
+        },
+        {
+          type: "text",
+          text: `จำนวน ${reservation.quantity} ${product ? product.unit : ""}`,
+          size: "sm",
+          color: "#334155",
+          margin: "xs"
+        },
+        {
+          type: "separator",
+          margin: "sm",
+          color: "#e2e8f0"
+        },
+        {
+          type: "box",
+          layout: "horizontal",
+          margin: "sm",
+          contents: [
+            {
+              type: "text",
+              text: `${formatDate(reservation.startDate)} - ${formatDate(reservation.endDate)}`,
+              size: "xs",
+              color: "#64748b",
+              flex: 3
+            },
+            {
+              type: "text",
+              text: remainingText,
+              size: "xs",
+              color: status.code === "warning" ? "#d97706" : "#475569",
+              weight: "bold",
+              align: "end",
+              flex: 2
+            }
+          ]
+        }
+      ]
+    };
+  });
+
+  return {
+    type: "flex",
+    altText: `สรุปการจองโกดัง: ${customer ? customer.name : "ลูกค้า"}`,
+    contents: {
+      type: "bubble",
+      size: "mega",
+      header: {
+        type: "box",
+        layout: "vertical",
+        backgroundColor: "#0f172a",
+        paddingAll: "16px",
+        contents: [
+          {
+            type: "text",
+            text: "📦 สรุปการจองโกดัง",
+            weight: "bold",
+            color: "#38bdf8",
+            size: "sm"
+          },
+          {
+            type: "text",
+            text: `ลูกค้า: ${customer ? customer.name : "-"}`,
+            weight: "bold",
+            color: "#ffffff",
+            size: "lg",
+            margin: "xs"
+          },
+          {
+            type: "text",
+            text: `ข้อมูล ณ วันที่ ${formatDate(todayText)}`,
+            color: "#94a3b8",
+            size: "xs",
+            margin: "xs"
+          }
+        ]
+      },
+      body: {
+        type: "box",
+        layout: "vertical",
+        paddingAll: "16px",
+        contents: reservationCards
+      },
+      footer: {
+        type: "box",
+        layout: "vertical",
+        paddingAll: "12px",
+        contents: [
+          {
+            type: "button",
+            action: {
+              type: "uri",
+              label: "เปิดระบบเพื่อดูรายละเอียด",
+              uri: getShareLink()
+            },
+            style: "primary",
+            color: "#0284c7",
+            height: "sm"
+          }
+        ]
+      }
+    }
+  };
+}
 
   function buildStockSummaryText() {
     const lines = [];
@@ -1536,9 +1681,31 @@
       shareToLine(buildCustomerSummaryText());
     });
 
-    document.getElementById("shareSummaryButton")?.addEventListener("click", () => {
-      shareToLine(buildCustomerSummaryText());
-    });
+// ปรับปรุง Event Listener สำหรับปุ่มแชร์
+document.getElementById("shareSummaryButton")?.addEventListener("click", async () => {
+  if (liffReady && liff.isApiAvailable("shareTargetPicker")) {
+    if (!liff.isLoggedIn()) {
+      liff.login({ redirectUri: window.location.href });
+      return;
+    }
+
+    try {
+      // ดึง Flex Message Payload
+      const flexMessage = buildCustomerSummaryFlex();
+      const result = await liff.shareTargetPicker([flexMessage]);
+
+      if (result) {
+        showAlert("ส่ง Flex Message เข้า LINE เรียบร้อยแล้ว");
+      } else {
+        showAlert("ยกเลิกการแชร์");
+      }
+    } catch (error) {
+      console.error("shareTargetPicker error:", error);
+      showAlert("แชร์ผ่าน LINE ไม่สำเร็จ", "error");
+    }
+  } else {
+  }
+});
 
     document.getElementById("shareStockButton")?.addEventListener("click", () => {
       shareToLine(buildStockSummaryText());
