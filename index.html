@@ -211,6 +211,14 @@
       50% { box-shadow: 0 0 0 10px rgba(255, 215, 111, 0); }
     }
 
+    /* แบนเนอร์ต้อนรับเมื่อเข้ามาจากการ์ดที่แชร์ */
+    .welcome {
+      margin: 0 auto 20px; max-width: 520px; padding: 14px 18px;
+      border-radius: 16px; text-align: center; font-size: 15px;
+      color: #d9fff0; background: rgba(46, 196, 182, .16);
+      border: 1px solid rgba(46, 196, 182, .5);
+    }
+
     /* ===== การ์ด ===== */
     .card {
       position: relative; margin-bottom: 20px; padding: 22px;
@@ -277,9 +285,11 @@
       background: rgba(255, 159, 69, .16); border: 1px dashed rgba(255, 215, 111, .55);
     }
 
-    .warn {
-      margin-top: 14px; font-size: 13px; color: var(--dim);
-    }
+    .warn { margin-top: 14px; font-size: 13px; color: var(--dim); }
+
+    /* การ์ดชวนแชร์ */
+    .share-card { text-align: center; }
+    .share-card p { margin: 0 0 16px; color: var(--dim); line-height: 1.6; }
 
     .footer-note { text-align: center; font-size: 13px; color: var(--dim); margin-top: 24px; }
 
@@ -347,7 +357,7 @@
     </div>
 
     <div class="header-right">
-      <button id="shareButton" class="btn btn-line btn-small" type="button">แชร์ไปยัง LINE</button>
+      <button class="btn btn-line btn-small" type="button" data-share>แชร์ไปยัง LINE</button>
       <button id="effectToggle" class="btn btn-ghost btn-small" type="button">ปิดเอฟเฟกต์</button>
       <button id="closeLiffButton" class="btn btn-ghost btn-small hidden" type="button">ปิด</button>
     </div>
@@ -358,6 +368,10 @@
       <h1>🎆 วิธีสั่งซื้อสินค้า 🎇</h1>
       <p>เลือกสินค้าที่ชอบ แคปหน้าจอ แล้วส่งในไลน์ทางร้านได้เลยค่ะ</p>
     </section>
+
+    <div id="welcomeBanner" class="welcome hidden">
+      🎉 ยินดีต้อนรับค่ะ เพื่อนของคุณแชร์ร้านนี้มาให้ ดูวิธีสั่งซื้อด้านล่างได้เลย
+    </div>
 
     <div class="announce">🔔 เว็บรออัปเดตของใหม่ 🔔</div>
 
@@ -433,6 +447,13 @@
       <div class="warn">กรุณาตรวจสอบชื่อบัญชีให้ตรงกับข้างต้นก่อนโอนทุกครั้ง</div>
     </section>
 
+    <!-- ชวนแชร์ -->
+    <section class="card share-card">
+      <h2 class="card-title">🎇 ชวนเพื่อนมาเที่ยวงาน</h2>
+      <p>ส่งการ์ดวิธีสั่งซื้อให้เพื่อนหรือกลุ่มใน LINE<br>เพื่อนกดการ์ดแล้วกลับมาที่หน้านี้ได้ทันที</p>
+      <button class="btn btn-line" type="button" data-share>📤 ส่งการ์ดให้เพื่อนใน LINE</button>
+    </section>
+
     <p class="footer-note">ขอบคุณที่อุดหนุนค่ะ 🎇</p>
   </main>
 
@@ -457,9 +478,29 @@
       accountNames: ["ณัฐริกา ศิลปชัย", "กัญญารัตน์ ศิลปชัย"]
     };
 
-    /* ใส่ LIFF ID จาก LINE Developers (ถ้ายังไม่มี ปล่อยไว้แบบนี้ได้) */
-    const LIFF_ID = "2000000000-abcdefgh";
+    /* LIFF ID เดิมของร้าน */
+    const LIFF_ID = "2011773702-rRi1WQNm";
+    const LIFF_URL = "https://liff.line.me/" + LIFF_ID;
+
+    /* ลิงก์ที่ฝังในการ์ด: ใส่ ?from=share เพื่อให้หน้าเว็บรู้ว่ามาจากการ์ด */
+    const RETURN_URL = LIFF_URL + "?from=share";
+
     const EFFECT_KEY = "holiday-firework-effect";
+
+    /* สีธีมเทศกาลสำหรับการ์ด LINE */
+    const C = {
+      night: "#1a0b2e",
+      night2: "#2b1055",
+      night3: "#0f3443",
+      gold: "#ffd76f",
+      lantern: "#ff9f45",
+      pink: "#ff6b9d",
+      red: "#e63946",
+      cream: "#fff6ec",
+      text: "#fdf6e3",
+      dim: "#c3b6d9",
+      line: "#06c755"
+    };
 
     let liffReady = false;
 
@@ -468,7 +509,7 @@
       toast.textContent = message;
       toast.classList.add("show");
       clearTimeout(showToast.timer);
-      showToast.timer = setTimeout(() => toast.classList.remove("show"), 2500);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 2800);
     }
 
     function isLiffConfigured() {
@@ -490,7 +531,16 @@
       }
     }
 
-    /* เปิดลิงก์: ในแอป LINE ให้เปิดเว็บร้านด้วยเบราว์เซอร์ภายนอก เพื่อให้รูปโหลดได้ดีกว่า */
+    /* แสดงข้อความต้อนรับเมื่อเปิดจากการ์ดที่แชร์ */
+    function checkWelcome() {
+      const params = new URLSearchParams(window.location.search);
+
+      if (params.get("from") === "share") {
+        document.getElementById("welcomeBanner").classList.remove("hidden");
+        showToast("ยินดีต้อนรับสู่ Holiday Firework 🎆");
+      }
+    }
+
     function openLink(type) {
       const url = type === "line" ? SHOP.lineUrl : SHOP.websiteUrl;
 
@@ -502,6 +552,246 @@
       window.open(url, "_blank", "noopener");
     }
 
+    /* ===========================================
+       ออกแบบการ์ด Flex Message
+       =========================================== */
+
+    /* แถบโนเรนแดง-ขาวด้านบนการ์ด */
+    function norenStripe() {
+      const stripes = [];
+
+      for (let i = 0; i < 10; i++) {
+        stripes.push({
+          type: "box",
+          layout: "vertical",
+          height: "6px",
+          backgroundColor: i % 2 === 0 ? C.red : C.cream,
+          contents: []
+        });
+      }
+
+      return { type: "box", layout: "horizontal", contents: stripes };
+    }
+
+    /* แถวขั้นตอนพร้อมวงกลมตัวเลขสีทอง */
+    function stepRow(number, title, detail) {
+      return {
+        type: "box",
+        layout: "horizontal",
+        spacing: "md",
+        margin: "md",
+        contents: [
+          {
+            type: "box",
+            layout: "vertical",
+            width: "28px",
+            height: "28px",
+            cornerRadius: "14px",
+            backgroundColor: C.gold,
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 0,
+            contents: [
+              {
+                type: "text",
+                text: String(number),
+                weight: "bold",
+                size: "sm",
+                color: C.night2,
+                align: "center"
+              }
+            ]
+          },
+          {
+            type: "box",
+            layout: "vertical",
+            flex: 1,
+            contents: [
+              { type: "text", text: title, weight: "bold", size: "sm", color: C.text },
+              { type: "text", text: detail, size: "xs", color: C.dim, wrap: true }
+            ]
+          }
+        ]
+      };
+    }
+
+    /* ปุ่มแบบกล่อง กำหนดสีพื้นและสีตัวอักษรได้เอง */
+    function linkButton(label, url, background, textColor) {
+      return {
+        type: "box",
+        layout: "vertical",
+        cornerRadius: "12px",
+        backgroundColor: background,
+        paddingAll: "12px",
+        margin: "sm",
+        action: { type: "uri", label: label.slice(0, 20), uri: url },
+        contents: [
+          {
+            type: "text",
+            text: label,
+            weight: "bold",
+            size: "sm",
+            color: textColor,
+            align: "center"
+          }
+        ]
+      };
+    }
+
+    function buildShareFlex() {
+      return {
+        type: "flex",
+        altText: "🎆 " + SHOP.name + " วิธีสั่งซื้อสินค้า กดเพื่อดูรายละเอียด",
+        contents: {
+          type: "bubble",
+          size: "mega",
+          styles: {
+            body: { backgroundColor: C.night },
+            footer: { backgroundColor: C.night, separator: true, separatorColor: "#3d2a5c" }
+          },
+
+          header: {
+            type: "box",
+            layout: "vertical",
+            paddingAll: "0px",
+            action: { type: "uri", label: "เปิดหน้าวิธีสั่งซื้อ", uri: RETURN_URL },
+            contents: [
+              norenStripe(),
+              {
+                type: "box",
+                layout: "vertical",
+                paddingAll: "18px",
+                background: {
+                  type: "linearGradient",
+                  angle: "135deg",
+                  startColor: C.night2,
+                  endColor: C.night3
+                },
+                contents: [
+                  {
+                    type: "text",
+                    text: "🎆 " + SHOP.name + " 🎇",
+                    weight: "bold",
+                    size: "lg",
+                    color: C.gold
+                  },
+                  {
+                    type: "text",
+                    text: "วิธีสั่งซื้อสินค้า",
+                    size: "xl",
+                    weight: "bold",
+                    color: C.text,
+                    margin: "xs"
+                  },
+                  {
+                    type: "box",
+                    layout: "vertical",
+                    margin: "md",
+                    cornerRadius: "20px",
+                    backgroundColor: "#ff9f4533",
+                    borderColor: C.gold,
+                    borderWidth: "1px",
+                    paddingTop: "4px",
+                    paddingBottom: "4px",
+                    paddingStart: "12px",
+                    paddingEnd: "12px",
+                    contents: [
+                      {
+                        type: "text",
+                        text: "🔔 เว็บรออัปเดตของใหม่",
+                        size: "xs",
+                        color: C.gold,
+                        align: "center"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+
+          body: {
+            type: "box",
+            layout: "vertical",
+            paddingAll: "18px",
+            contents: [
+              stepRow(1, "เลือกสินค้า", "ดูสินค้าในเว็บของร้าน"),
+              stepRow(2, "แคปหน้าจอ", "แคปสินค้าที่สนใจไว้"),
+              stepRow(3, "ส่งในไลน์", "ส่งรูปให้แอดมินในไลน์ร้าน"),
+              stepRow(4, "โอนและแจ้งสลิป", "ส่งสลิป ชื่อ และที่อยู่จัดส่ง"),
+
+              {
+                type: "box",
+                layout: "vertical",
+                margin: "xl",
+                paddingAll: "14px",
+                cornerRadius: "14px",
+                backgroundColor: C.night2,
+                borderColor: C.gold,
+                borderWidth: "1px",
+                contents: [
+                  {
+                    type: "text",
+                    text: "⭐️ " + SHOP.bank + " ⭐️",
+                    size: "sm",
+                    weight: "bold",
+                    color: C.pink,
+                    align: "center"
+                  },
+                  {
+                    type: "text",
+                    text: SHOP.accountNumber,
+                    size: "xxl",
+                    weight: "bold",
+                    color: C.gold,
+                    align: "center",
+                    margin: "sm"
+                  },
+                  {
+                    type: "text",
+                    text: "✅ " + SHOP.accountNames[0] + " ✅",
+                    size: "sm",
+                    color: C.text,
+                    align: "center",
+                    margin: "sm"
+                  },
+                  {
+                    type: "text",
+                    text: "หรือ " + SHOP.accountNames[1],
+                    size: "xs",
+                    color: C.dim,
+                    align: "center"
+                  }
+                ]
+              },
+
+              {
+                type: "text",
+                text: "🎆 โอนแล้วแจ้งสลิป ชื่อ ที่อยู่ได้เลยค่ะ 🎇",
+                size: "xs",
+                color: C.lantern,
+                align: "center",
+                wrap: true,
+                margin: "md"
+              }
+            ]
+          },
+
+          footer: {
+            type: "box",
+            layout: "vertical",
+            paddingAll: "14px",
+            contents: [
+              linkButton("🎆 เปิดดูวิธีสั่งซื้อ", RETURN_URL, C.gold, C.night2),
+              linkButton("🌐 ดูสินค้าในเว็บร้าน", SHOP.websiteUrl, C.night2, C.gold),
+              linkButton("💬 ทักไลน์สั่งซื้อ", SHOP.lineUrl, C.line, "#ffffff")
+            ]
+          }
+        }
+      };
+    }
+
+    /* ข้อความสำรอง ใช้เมื่อเปิดนอก LIFF หรือส่งการ์ดไม่สำเร็จ */
     function buildShareText() {
       return [
         "🎆 " + SHOP.name + " 🎇",
@@ -518,13 +808,13 @@
         "✅ " + SHOP.accountNames[0] + " ✅",
         "หรือ " + SHOP.accountNames[1],
         "",
-        "🎆 โอนแจ้งสลิป ชื่อ ที่อยู่ได้เลยค่ะ 🎇"
+        "🎆 โอนแจ้งสลิป ชื่อ ที่อยู่ได้เลยค่ะ 🎇",
+        "",
+        "📲 ดูวิธีสั่งซื้อ: " + RETURN_URL
       ].join("\n");
     }
 
     async function shareToLine() {
-      const message = buildShareText();
-
       if (liffReady && liff.isApiAvailable("shareTargetPicker")) {
         if (!liff.isLoggedIn()) {
           liff.login({ redirectUri: window.location.href });
@@ -532,16 +822,24 @@
         }
 
         try {
-          const result = await liff.shareTargetPicker([{ type: "text", text: message }]);
-          showToast(result ? "แชร์เรียบร้อยแล้ว" : "ยกเลิกการแชร์");
+          const result = await liff.shareTargetPicker([buildShareFlex()]);
+          showToast(result ? "ส่งการ์ดเรียบร้อยแล้ว 🎆" : "ยกเลิกการแชร์");
         } catch (error) {
-          console.error(error);
-          showToast("แชร์ไม่สำเร็จ ลองใหม่อีกครั้ง");
+          console.error("Flex share error:", error);
+
+          /* ถ้าส่งการ์ดไม่ผ่าน ให้ส่งเป็นข้อความแทน */
+          try {
+            const result = await liff.shareTargetPicker([{ type: "text", text: buildShareText() }]);
+            showToast(result ? "ส่งเป็นข้อความเรียบร้อยแล้ว" : "ยกเลิกการแชร์");
+          } catch (fallbackError) {
+            console.error(fallbackError);
+            showToast("แชร์ไม่สำเร็จ ลองใหม่อีกครั้ง");
+          }
         }
         return;
       }
 
-      window.open("https://line.me/R/msg/text/?" + encodeURIComponent(message), "_blank");
+      window.open("https://line.me/R/msg/text/?" + encodeURIComponent(buildShareText()), "_blank");
     }
 
     async function copyText(text, successMessage) {
@@ -558,15 +856,19 @@
       button.addEventListener("click", () => openLink(button.dataset.link));
     });
 
-    document.getElementById("shareButton").addEventListener("click", shareToLine);
+    document.querySelectorAll("[data-share]").forEach(button => {
+      button.addEventListener("click", shareToLine);
+    });
 
     document.getElementById("copyAccountButton").addEventListener("click", () => {
       copyText(SHOP.accountNumber, "คัดลอกเลขบัญชีแล้ว ✅");
     });
 
     document.getElementById("requestListButton").addEventListener("click", async () => {
-      await copyText("สวัสดีค่ะ รูปในเว็บไม่โหลด รบกวนส่งรายการสินค้าให้หน่อยค่ะ",
-        "คัดลอกข้อความแล้ว วางในแชตได้เลย");
+      await copyText(
+        "สวัสดีค่ะ รูปในเว็บไม่โหลด รบกวนส่งรายการสินค้าให้หน่อยค่ะ",
+        "คัดลอกข้อความแล้ว วางในแชตได้เลย"
+      );
       openLink("line");
     });
 
@@ -585,7 +887,8 @@
       document.getElementById("effectToggle").textContent = "เปิดเอฟเฟกต์";
     }
 
-    initLiff();
+    /* เริ่ม LIFF ก่อน แล้วค่อยเช็กว่ามาจากการ์ดหรือไม่ */
+    initLiff().then(checkWelcome);
   </script>
 </body>
 </html>
