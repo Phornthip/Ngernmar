@@ -211,7 +211,6 @@
       50% { box-shadow: 0 0 0 10px rgba(255, 215, 111, 0); }
     }
 
-    /* แบนเนอร์ต้อนรับเมื่อเข้ามาจากการ์ดที่แชร์ */
     .welcome {
       margin: 0 auto 20px; max-width: 520px; padding: 14px 18px;
       border-radius: 16px; text-align: center; font-size: 15px;
@@ -287,7 +286,6 @@
 
     .warn { margin-top: 14px; font-size: 13px; color: var(--dim); }
 
-    /* การ์ดชวนแชร์ */
     .share-card { text-align: center; }
     .share-card p { margin: 0 0 16px; color: var(--dim); line-height: 1.6; }
 
@@ -302,7 +300,6 @@
     }
     .bottom-bar .btn { flex: 1; }
 
-    /* แจ้งเตือนลอย */
     .toast {
       position: fixed; left: 50%; bottom: 96px; z-index: 50;
       transform: translateX(-50%) translateY(20px);
@@ -466,9 +463,6 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    /* ===========================================
-       ข้อมูลร้าน แก้ไขได้ที่นี่จุดเดียว
-       =========================================== */
     const SHOP = {
       name: "Holiday Firework",
       lineUrl: "https://lin.ee/rOh1mCa",
@@ -478,16 +472,11 @@
       accountNames: ["ณัฐริกา ศิลปชัย", "กัญญารัตน์ ศิลปชัย"]
     };
 
-    /* LIFF ID เดิมของร้าน */
     const LIFF_ID = "2011773702-rRi1WQNm";
     const LIFF_URL = "https://liff.line.me/" + LIFF_ID;
-
-    /* ลิงก์ที่ฝังในการ์ด: ใส่ ?from=share เพื่อให้หน้าเว็บรู้ว่ามาจากการ์ด */
     const RETURN_URL = LIFF_URL + "?from=share";
-
     const EFFECT_KEY = "holiday-firework-effect";
 
-    /* สีธีมเทศกาลสำหรับการ์ด LINE */
     const C = {
       night: "#1a0b2e",
       night2: "#2b1055",
@@ -518,11 +507,9 @@
 
     async function initLiff() {
       if (!isLiffConfigured()) return;
-
       try {
         await liff.init({ liffId: LIFF_ID });
         liffReady = true;
-
         if (liff.isInClient()) {
           document.getElementById("closeLiffButton").classList.remove("hidden");
         }
@@ -531,10 +518,8 @@
       }
     }
 
-    /* แสดงข้อความต้อนรับเมื่อเปิดจากการ์ดที่แชร์ */
     function checkWelcome() {
       const params = new URLSearchParams(window.location.search);
-
       if (params.get("from") === "share") {
         document.getElementById("welcomeBanner").classList.remove("hidden");
         showToast("ยินดีต้อนรับสู่ Holiday Firework 🎆");
@@ -543,23 +528,15 @@
 
     function openLink(type) {
       const url = type === "line" ? SHOP.lineUrl : SHOP.websiteUrl;
-
       if (liffReady && liff.isInClient()) {
         liff.openWindow({ url, external: type === "website" });
         return;
       }
-
       window.open(url, "_blank", "noopener");
     }
 
-    /* ===========================================
-       ออกแบบการ์ด Flex Message
-       =========================================== */
-
-    /* แถบโนเรนแดง-ขาวด้านบนการ์ด */
     function norenStripe() {
       const stripes = [];
-
       for (let i = 0; i < 10; i++) {
         stripes.push({
           type: "box",
@@ -569,11 +546,9 @@
           contents: []
         });
       }
-
       return { type: "box", layout: "horizontal", contents: stripes };
     }
 
-    /* แถวขั้นตอนพร้อมวงกลมตัวเลขสีทอง */
     function stepRow(number, title, detail) {
       return {
         type: "box",
@@ -592,14 +567,7 @@
             alignItems: "center",
             flex: 0,
             contents: [
-              {
-                type: "text",
-                text: String(number),
-                weight: "bold",
-                size: "sm",
-                color: C.night2,
-                align: "center"
-              }
+              { type: "text", text: String(number), weight: "bold", size: "sm", color: C.night2, align: "center" }
             ]
           },
           {
@@ -615,7 +583,6 @@
       };
     }
 
-    /* ปุ่มแบบกล่อง กำหนดสีพื้นและสีตัวอักษรได้เอง */
     function linkButton(label, url, background, textColor) {
       return {
         type: "box",
@@ -626,14 +593,7 @@
         margin: "sm",
         action: { type: "uri", label: label.slice(0, 20), uri: url },
         contents: [
-          {
-            type: "text",
-            text: label,
-            weight: "bold",
-            size: "sm",
-            color: textColor,
-            align: "center"
-          }
+          { type: "text", text: label, weight: "bold", size: "sm", color: textColor, align: "center" }
         ]
       };
     }
@@ -649,7 +609,6 @@
             body: { backgroundColor: C.night },
             footer: { backgroundColor: C.night, separator: true, separatorColor: "#3d2a5c" }
           },
-
           header: {
             type: "box",
             layout: "vertical",
@@ -668,21 +627,8 @@
                   endColor: C.night3
                 },
                 contents: [
-                  {
-                    type: "text",
-                    text: "🎆 " + SHOP.name + " 🎇",
-                    weight: "bold",
-                    size: "lg",
-                    color: C.gold
-                  },
-                  {
-                    type: "text",
-                    text: "วิธีสั่งซื้อสินค้า",
-                    size: "xl",
-                    weight: "bold",
-                    color: C.text,
-                    margin: "xs"
-                  },
+                  { type: "text", text: "🎆 " + SHOP.name + " 🎇", weight: "bold", size: "lg", color: C.gold },
+                  { type: "text", text: "วิธีสั่งซื้อสินค้า", size: "xl", weight: "bold", color: C.text, margin: "xs" },
                   {
                     type: "box",
                     layout: "vertical",
@@ -696,20 +642,13 @@
                     paddingStart: "12px",
                     paddingEnd: "12px",
                     contents: [
-                      {
-                        type: "text",
-                        text: "🔔 เว็บรออัปเดตของใหม่",
-                        size: "xs",
-                        color: C.gold,
-                        align: "center"
-                      }
+                      { type: "text", text: "🔔 เว็บรออัปเดตของใหม่", size: "xs", color: C.gold, align: "center" }
                     ]
                   }
                 ]
               }
             ]
           },
-
           body: {
             type: "box",
             layout: "vertical",
@@ -719,7 +658,6 @@
               stepRow(2, "แคปหน้าจอ", "แคปสินค้าที่สนใจไว้"),
               stepRow(3, "ส่งในไลน์", "ส่งรูปให้แอดมินในไลน์ร้าน"),
               stepRow(4, "โอนและแจ้งสลิป", "ส่งสลิป ชื่อ และที่อยู่จัดส่ง"),
-
               {
                 type: "box",
                 layout: "vertical",
@@ -730,53 +668,15 @@
                 borderColor: C.gold,
                 borderWidth: "1px",
                 contents: [
-                  {
-                    type: "text",
-                    text: "⭐️ " + SHOP.bank + " ⭐️",
-                    size: "sm",
-                    weight: "bold",
-                    color: C.pink,
-                    align: "center"
-                  },
-                  {
-                    type: "text",
-                    text: SHOP.accountNumber,
-                    size: "xxl",
-                    weight: "bold",
-                    color: C.gold,
-                    align: "center",
-                    margin: "sm"
-                  },
-                  {
-                    type: "text",
-                    text: "✅ " + SHOP.accountNames[0] + " ✅",
-                    size: "sm",
-                    color: C.text,
-                    align: "center",
-                    margin: "sm"
-                  },
-                  {
-                    type: "text",
-                    text: "หรือ " + SHOP.accountNames[1],
-                    size: "xs",
-                    color: C.dim,
-                    align: "center"
-                  }
+                  { type: "text", text: "⭐️ " + SHOP.bank + " ⭐️", size: "sm", weight: "bold", color: C.pink, align: "center" },
+                  { type: "text", text: SHOP.accountNumber, size: "xxl", weight: "bold", color: C.gold, align: "center", margin: "sm" },
+                  { type: "text", text: "✅ " + SHOP.accountNames[0] + " ✅", size: "sm", color: C.text, align: "center", margin: "sm" },
+                  { type: "text", text: "หรือ " + SHOP.accountNames[1], size: "xs", color: C.dim, align: "center" }
                 ]
               },
-
-              {
-                type: "text",
-                text: "🎆 โอนแล้วแจ้งสลิป ชื่อ ที่อยู่ได้เลยค่ะ 🎇",
-                size: "xs",
-                color: C.lantern,
-                align: "center",
-                wrap: true,
-                margin: "md"
-              }
+              { type: "text", text: "🎆 โอนแล้วแจ้งสลิป ชื่อ ที่อยู่ได้เลยค่ะ 🎇", size: "xs", color: C.lantern, align: "center", wrap: true, margin: "md" }
             ]
           },
-
           footer: {
             type: "box",
             layout: "vertical",
@@ -791,7 +691,6 @@
       };
     }
 
-    /* ข้อความสำรอง ใช้เมื่อเปิดนอก LIFF หรือส่งการ์ดไม่สำเร็จ */
     function buildShareText() {
       return [
         "🎆 " + SHOP.name + " 🎇",
@@ -820,25 +719,19 @@
           liff.login({ redirectUri: window.location.href });
           return;
         }
-
         try {
           const result = await liff.shareTargetPicker([buildShareFlex()]);
           showToast(result ? "ส่งการ์ดเรียบร้อยแล้ว 🎆" : "ยกเลิกการแชร์");
         } catch (error) {
-          console.error("Flex share error:", error);
-
-          /* ถ้าส่งการ์ดไม่ผ่าน ให้ส่งเป็นข้อความแทน */
           try {
             const result = await liff.shareTargetPicker([{ type: "text", text: buildShareText() }]);
             showToast(result ? "ส่งเป็นข้อความเรียบร้อยแล้ว" : "ยกเลิกการแชร์");
           } catch (fallbackError) {
-            console.error(fallbackError);
             showToast("แชร์ไม่สำเร็จ ลองใหม่อีกครั้ง");
           }
         }
         return;
       }
-
       window.open("https://line.me/R/msg/text/?" + encodeURIComponent(buildShareText()), "_blank");
     }
 
@@ -851,7 +744,6 @@
       }
     }
 
-    /* ===== เชื่อมปุ่ม ===== */
     document.querySelectorAll("[data-link]").forEach(button => {
       button.addEventListener("click", () => openLink(button.dataset.link));
     });
@@ -865,10 +757,7 @@
     });
 
     document.getElementById("requestListButton").addEventListener("click", async () => {
-      await copyText(
-        "สวัสดีค่ะ รูปในเว็บไม่โหลด รบกวนส่งรายการสินค้าให้หน่อยค่ะ",
-        "คัดลอกข้อความแล้ว วางในแชตได้เลย"
-      );
+      await copyText("สวัสดีค่ะ รูปในเว็บไม่โหลด รบกวนส่งรายการสินค้าให้หน่อยค่ะ", "คัดลอกข้อความแล้ว วางในแชตได้เลย");
       openLink("line");
     });
 
@@ -887,7 +776,6 @@
       document.getElementById("effectToggle").textContent = "เปิดเอฟเฟกต์";
     }
 
-    /* เริ่ม LIFF ก่อน แล้วค่อยเช็กว่ามาจากการ์ดหรือไม่ */
     initLiff().then(checkWelcome);
   </script>
 </body>
