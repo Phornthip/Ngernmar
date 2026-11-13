@@ -3,18 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>มหาจำเริญโกดัง | holiday shop</title>
+  <title>Holiday Firework | วิธีสั่งซื้อ</title>
 
   <!-- นำเข้า LINE LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&family=Mitr:wght@400;600&display=swap"
-    rel="stylesheet"
-  >
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&family=Mitr:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -22,26 +18,24 @@
       --night-2: #2b1055;
       --night-3: #0f3443;
       --gold: #ffd76f;
-      --gold-deep: #e6a83c;
-      --matsuri-red: #e63946;
-      --matsuri-pink: #ff6b9d;
+      --red: #e63946;
+      --pink: #ff6b9d;
       --lantern: #ff9f45;
       --teal: #2ec4b6;
       --violet: #9d4edd;
+      --line: #06c755;
       --text: #fdf6e3;
-      --text-dim: #c3b6d9;
+      --dim: #c3b6d9;
       --glass: rgba(255, 255, 255, 0.07);
       --glass-line: rgba(255, 215, 111, 0.28);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: "Kanit", "Noto Sans Thai", sans-serif;
+      font-family: "Kanit", sans-serif;
       font-weight: 300;
       color: var(--text);
       background:
@@ -50,31 +44,18 @@
         linear-gradient(170deg, var(--night-1) 0%, var(--night-2) 45%, var(--night-3) 100%);
       background-attachment: fixed;
       overflow-x: hidden;
+      padding-bottom: 90px;
     }
 
-    button,
-    input,
-    select {
-      font-family: inherit;
-      font-size: 15px;
-    }
+    button { font-family: inherit; }
+    a { color: inherit; }
 
     /* ===== ฉากหลังเทศกาล ===== */
-    .scene {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    body.plain-mode .scene {
-      display: none;
-    }
+    .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    body.plain-mode .scene { display: none; }
 
     .stars {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background-image:
         radial-gradient(1.6px 1.6px at 12% 18%, #fff, transparent),
         radial-gradient(1.4px 1.4px at 28% 42%, #ffe9b0, transparent),
@@ -82,609 +63,251 @@
         radial-gradient(1.3px 1.3px at 63% 34%, #cfe9ff, transparent),
         radial-gradient(1.7px 1.7px at 78% 20%, #fff, transparent),
         radial-gradient(1.4px 1.4px at 88% 48%, #ffd6ec, transparent),
-        radial-gradient(1.2px 1.2px at 35% 68%, #fff, transparent),
-        radial-gradient(1.5px 1.5px at 71% 72%, #ffe9b0, transparent);
+        radial-gradient(1.2px 1.2px at 35% 68%, #fff, transparent);
       animation: twinkle 4.5s ease-in-out infinite alternate;
     }
+    @keyframes twinkle { from { opacity: .35; } to { opacity: .95; } }
 
-    @keyframes twinkle {
-      from { opacity: 0.35; }
-      to { opacity: 0.95; }
-    }
-
-    /* ดอกไม้ไฟ */
     .hanabi {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      opacity: 0;
+      position: absolute; width: 6px; height: 6px; border-radius: 50%; opacity: 0;
       box-shadow:
-        0 -70px 0 0 currentColor, 49px -49px 0 0 currentColor,
-        70px 0 0 0 currentColor, 49px 49px 0 0 currentColor,
-        0 70px 0 0 currentColor, -49px 49px 0 0 currentColor,
+        0 -70px 0 0 currentColor, 49px -49px 0 0 currentColor, 70px 0 0 0 currentColor,
+        49px 49px 0 0 currentColor, 0 70px 0 0 currentColor, -49px 49px 0 0 currentColor,
         -70px 0 0 0 currentColor, -49px -49px 0 0 currentColor,
-        0 -40px 0 0 currentColor, 28px -28px 0 0 currentColor,
-        40px 0 0 0 currentColor, 28px 28px 0 0 currentColor,
-        0 40px 0 0 currentColor, -28px 28px 0 0 currentColor,
+        0 -40px 0 0 currentColor, 28px -28px 0 0 currentColor, 40px 0 0 0 currentColor,
+        28px 28px 0 0 currentColor, 0 40px 0 0 currentColor, -28px 28px 0 0 currentColor,
         -40px 0 0 0 currentColor, -28px -28px 0 0 currentColor,
-        36px -60px 0 0 currentColor, 60px -36px 0 0 currentColor,
-        60px 36px 0 0 currentColor, 36px 60px 0 0 currentColor,
-        -36px 60px 0 0 currentColor, -60px 36px 0 0 currentColor,
+        36px -60px 0 0 currentColor, 60px -36px 0 0 currentColor, 60px 36px 0 0 currentColor,
+        36px 60px 0 0 currentColor, -36px 60px 0 0 currentColor, -60px 36px 0 0 currentColor,
         -60px -36px 0 0 currentColor, -36px -60px 0 0 currentColor;
-      animation: hanabi-burst 5s ease-out infinite;
+      animation: burst 5s ease-out infinite;
     }
-
-    @keyframes hanabi-burst {
-      0% { transform: scale(0.1); opacity: 0; }
+    @keyframes burst {
+      0% { transform: scale(.1); opacity: 0; }
       8% { opacity: 1; }
-      45% { transform: scale(1.15); opacity: 0.9; }
-      70% { transform: scale(1.45); opacity: 0.25; }
+      45% { transform: scale(1.15); opacity: .9; }
+      70% { transform: scale(1.45); opacity: .25; }
       100% { transform: scale(1.6) translateY(24px); opacity: 0; }
     }
+    .h1 { top: 14%; left: 14%; color: var(--gold); }
+    .h2 { top: 10%; left: 76%; color: var(--pink); animation-delay: 1.3s; }
+    .h3 { top: 30%; left: 46%; color: var(--teal); animation-delay: 2.5s; }
+    .h4 { top: 24%; left: 92%; color: var(--violet); animation-delay: 3.4s; }
+    .h5 { top: 40%; left: 6%; color: var(--red); animation-delay: 4.2s; }
 
-    .hanabi-1 { top: 16%; left: 16%; color: var(--gold); animation-delay: 0s; }
-    .hanabi-2 { top: 11%; left: 74%; color: var(--matsuri-pink); animation-delay: 1.3s; }
-    .hanabi-3 { top: 30%; left: 44%; color: var(--teal); animation-delay: 2.5s; }
-    .hanabi-4 { top: 22%; left: 90%; color: var(--violet); animation-delay: 3.4s; }
-    .hanabi-5 { top: 38%; left: 8%; color: var(--matsuri-red); animation-delay: 4.2s; }
-
-    /* โคมลอย */
     .lantern-float {
-      position: absolute;
-      bottom: -140px;
-      width: 26px;
-      height: 34px;
+      position: absolute; bottom: -140px; width: 26px; height: 34px;
       border-radius: 50% 50% 46% 46%;
       background: radial-gradient(circle at 50% 30%, #fff3c4, var(--lantern) 55%, #d9522b 100%);
-      box-shadow: 0 0 26px 8px rgba(255, 159, 69, 0.45);
+      box-shadow: 0 0 26px 8px rgba(255, 159, 69, .45);
       animation: rise 20s linear infinite;
-      opacity: 0.85;
     }
-
-    .lantern-float::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: -7px;
-      width: 8px;
-      height: 8px;
-      transform: translateX(-50%);
-      border-radius: 50%;
-      background: #ffd76f;
-      filter: blur(1px);
-    }
-
     @keyframes rise {
-      0% { transform: translate(0, 0) scale(0.7); opacity: 0; }
-      12% { opacity: 0.9; }
+      0% { transform: translate(0, 0) scale(.7); opacity: 0; }
+      12% { opacity: .9; }
       50% { transform: translate(34px, -55vh) scale(1); }
-      85% { opacity: 0.6; }
       100% { transform: translate(-18px, -115vh) scale(1.1); opacity: 0; }
     }
+    .la { left: 9%; } .lb { left: 30%; animation-delay: 5s; }
+    .lc { left: 60%; animation-delay: 9s; } .ld { left: 85%; animation-delay: 14s; }
 
-    .lantern-a { left: 9%; animation-delay: 0s; }
-    .lantern-b { left: 27%; animation-delay: 5s; transform: scale(0.8); }
-    .lantern-c { left: 58%; animation-delay: 9s; }
-    .lantern-d { left: 79%; animation-delay: 13s; transform: scale(0.9); }
-    .lantern-e { left: 94%; animation-delay: 17s; transform: scale(0.75); }
-
-    /* กระทงลอยน้ำด้านล่าง */
     .river {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 130px;
-      background: linear-gradient(to top, rgba(10, 40, 60, 0.75), transparent);
+      position: absolute; left: 0; right: 0; bottom: 0; height: 130px;
+      background: linear-gradient(to top, rgba(10, 40, 60, .75), transparent);
     }
-
     .krathong {
-      position: absolute;
-      bottom: 26px;
-      width: 40px;
-      height: 16px;
-      border-radius: 50%;
+      position: absolute; bottom: 26px; width: 40px; height: 16px; border-radius: 50%;
       background: linear-gradient(to top, #2f7d4f, #8ed99b);
-      box-shadow: 0 0 18px rgba(255, 214, 120, 0.55);
+      box-shadow: 0 0 18px rgba(255, 214, 120, .55);
       animation: drift 26s linear infinite;
-      opacity: 0.9;
     }
-
     .krathong::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: -9px;
-      width: 9px;
-      height: 13px;
-      transform: translateX(-50%);
-      border-radius: 50% 50% 40% 40%;
+      content: ""; position: absolute; left: 50%; top: -9px; width: 9px; height: 13px;
+      transform: translateX(-50%); border-radius: 50% 50% 40% 40%;
       background: radial-gradient(circle at 50% 30%, #fffbe6, #ffb347 60%, #e8590c);
-      box-shadow: 0 0 14px 4px rgba(255, 180, 71, 0.75);
-      animation: flicker 1.6s ease-in-out infinite alternate;
+      box-shadow: 0 0 14px 4px rgba(255, 180, 71, .75);
     }
-
-    @keyframes flicker {
-      from { transform: translateX(-50%) scaleY(0.88); opacity: 0.85; }
-      to { transform: translateX(-50%) scaleY(1.12); opacity: 1; }
-    }
-
-    @keyframes drift {
-      from { left: -60px; }
-      to { left: 105%; }
-    }
-
-    .krathong-1 { animation-delay: 0s; }
-    .krathong-2 { animation-delay: 8s; bottom: 52px; transform: scale(0.8); }
-    .krathong-3 { animation-delay: 16s; bottom: 12px; transform: scale(1.1); }
+    @keyframes drift { from { left: -60px; } to { left: 105%; } }
+    .k2 { animation-delay: 9s; bottom: 50px; }
+    .k3 { animation-delay: 17s; bottom: 12px; }
 
     /* ===== ส่วนหัว ===== */
     .noren {
-      position: relative;
-      z-index: 2;
-      height: 8px;
-      background: repeating-linear-gradient(
-        90deg,
-        var(--matsuri-red) 0 34px,
-        #fff6ec 34px 68px
-      );
-      box-shadow: 0 2px 16px rgba(230, 57, 70, 0.5);
+      position: relative; z-index: 2; height: 8px;
+      background: repeating-linear-gradient(90deg, var(--red) 0 34px, #fff6ec 34px 68px);
     }
 
     .header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 14px;
-      padding: 16px 26px;
-      background: rgba(26, 11, 46, 0.82);
+      position: sticky; top: 0; z-index: 20;
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      padding: 14px 22px;
+      background: rgba(26, 11, 46, .85);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--glass-line);
     }
 
-    .brand-wrap {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
+    .brand-wrap { display: flex; align-items: center; gap: 12px; }
 
     .chochin {
-      position: relative;
-      width: 30px;
-      height: 40px;
-      border-radius: 45% 45% 40% 40%;
+      position: relative; width: 28px; height: 38px; border-radius: 45% 45% 40% 40%;
       background:
-        repeating-linear-gradient(
-          to bottom,
-          rgba(0, 0, 0, 0.16) 0 1px,
-          transparent 1px 7px
-        ),
-        radial-gradient(circle at 50% 35%, #ff8080, var(--matsuri-red) 70%);
-      box-shadow: 0 0 22px rgba(230, 57, 70, 0.7);
+        repeating-linear-gradient(to bottom, rgba(0,0,0,.16) 0 1px, transparent 1px 7px),
+        radial-gradient(circle at 50% 35%, #ff8080, var(--red) 70%);
+      box-shadow: 0 0 22px rgba(230, 57, 70, .7);
       animation: sway 3.4s ease-in-out infinite alternate;
     }
-
-    .chochin::before,
-    .chochin::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 16px;
-      height: 4px;
-      background: #3a2a1a;
-      border-radius: 2px;
-    }
-
-    .chochin::before { top: -4px; }
-    .chochin::after { bottom: -4px; }
-
-    @keyframes sway {
-      from { transform: rotate(-7deg); }
-      to { transform: rotate(7deg); }
-    }
+    @keyframes sway { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
 
     .brand {
-      font-family: "Mitr", sans-serif;
-      font-weight: 600;
-      font-size: 21px;
-      line-height: 1.1;
-      background: linear-gradient(90deg, var(--gold) 0%, var(--matsuri-pink) 55%, var(--teal) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      font-family: "Mitr", sans-serif; font-weight: 600; font-size: 20px;
+      background: linear-gradient(90deg, var(--gold), var(--pink) 55%, var(--teal));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
     }
+    .brand-sub { font-size: 11px; letter-spacing: 3px; color: var(--dim); }
 
-    .brand-sub {
-      font-size: 12px;
-      letter-spacing: 3px;
-      color: var(--text-dim);
-      text-transform: uppercase;
-    }
-
-    .header-right {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+    .header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
     .container {
-      position: relative;
-      z-index: 2;
-      max-width: 1200px;
-      margin: 28px auto 60px;
-      padding: 0 18px;
+      position: relative; z-index: 2;
+      max-width: 860px; margin: 26px auto 40px; padding: 0 16px;
     }
 
-    /* ===== แท็บ ===== */
-    .tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 22px;
+    /* ===== ปุ่ม ===== */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px 20px; border: 0; border-radius: 14px;
+      font-size: 16px; font-weight: 600; text-decoration: none; cursor: pointer;
+      transition: transform .2s ease, filter .2s ease;
     }
-
-    .tab-button {
-      flex: 0 1 auto;
-      padding: 12px 24px;
-      border: 1px solid var(--glass-line);
-      border-radius: 14px;
-      background: var(--glass);
-      color: var(--text-dim);
-      cursor: pointer;
-      backdrop-filter: blur(8px);
-      transition: all 0.25s ease;
-    }
-
-    .tab-button:hover {
-      color: var(--gold);
-      transform: translateY(-2px);
-    }
-
-    .tab-button.active {
-      color: #2b1055;
-      font-weight: 600;
-      border-color: transparent;
-      background: linear-gradient(135deg, var(--gold) 0%, var(--lantern) 100%);
-      box-shadow: 0 8px 26px rgba(255, 159, 69, 0.4);
-    }
-
-    .view { display: none; }
-    .view.active { display: block; animation: fade-in 0.45s ease; }
-
-    @keyframes fade-in {
-      from { opacity: 0; transform: translateY(14px); }
-      to { opacity: 1; transform: none; }
-    }
-
-    .page-title {
-      margin: 0 0 6px;
-      font-family: "Mitr", sans-serif;
-      font-weight: 600;
-      font-size: 30px;
-      text-shadow: 0 0 26px rgba(255, 215, 111, 0.35);
-    }
-
-    .subtitle {
-      margin: 0 0 24px;
-      color: var(--text-dim);
-      font-size: 15px;
-    }
-
-    /* ===== การ์ด ===== */
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .card {
-      position: relative;
-      padding: 20px;
-      border: 1px solid var(--glass-line);
-      border-radius: 18px;
-      background: var(--glass);
-      backdrop-filter: blur(16px);
-      box-shadow: 0 10px 34px rgba(0, 0, 0, 0.32);
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--gold), var(--matsuri-pink), var(--teal));
-      opacity: 0.85;
-    }
-
-    .summary-card {
-      text-align: center;
-      transition: transform 0.25s ease;
-    }
-
-    .summary-card:hover { transform: translateY(-4px); }
-
-    .summary-label {
-      margin-bottom: 10px;
-      font-size: 13px;
-      color: var(--text-dim);
-    }
-
-    .summary-value {
-      font-family: "Mitr", sans-serif;
-      font-size: 34px;
-      font-weight: 600;
-      line-height: 1;
-    }
-
-    .glow-gold { color: var(--gold); text-shadow: 0 0 20px rgba(255, 215, 111, 0.65); }
-    .glow-teal { color: var(--teal); text-shadow: 0 0 20px rgba(46, 196, 182, 0.65); }
-    .glow-orange { color: var(--lantern); text-shadow: 0 0 20px rgba(255, 159, 69, 0.65); }
-    .glow-pink { color: var(--matsuri-pink); text-shadow: 0 0 20px rgba(255, 107, 157, 0.65); }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      margin: 0;
-      font-family: "Mitr", sans-serif;
-      font-weight: 600;
-      font-size: 19px;
-      color: var(--gold);
-    }
-
-    /* ===== ตาราง ===== */
-    .table-wrapper {
-      overflow-x: auto;
-      border-radius: 14px;
-    }
-
-    table {
-      width: 100%;
-      min-width: 760px;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 14px 13px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    th {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--gold);
-      background: rgba(255, 215, 111, 0.08);
-      white-space: nowrap;
-    }
-
-    td { font-size: 14px; color: var(--text); }
-
-    tbody tr { transition: background 0.2s ease; }
-    tbody tr:hover { background: rgba(255, 215, 111, 0.07); }
-
-    .badge {
-      display: inline-block;
-      padding: 5px 13px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .badge-normal {
-      color: #072d24;
-      background: linear-gradient(135deg, #7ef0c8, var(--teal));
-    }
-
-    .badge-warning {
-      color: #3d1f00;
-      background: linear-gradient(135deg, #ffd76f, var(--lantern));
-    }
-
-    .badge-expired {
-      color: #fff2f2;
-      background: linear-gradient(135deg, #ff7b7b, var(--matsuri-red));
-    }
-
-    .badge-pending {
-      color: #fdf0ff;
-      background: linear-gradient(135deg, #c77dff, var(--violet));
-    }
-
-    /* ===== ฟอร์ม ===== */
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin-top: 18px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    label {
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--gold);
-    }
-
-    input, select {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1px solid rgba(255, 215, 111, 0.24);
-      border-radius: 12px;
-      background: rgba(12, 6, 26, 0.55);
-      color: var(--text);
-      outline: none;
-      transition: all 0.2s ease;
-    }
-
-    input::placeholder { color: rgba(195, 182, 217, 0.55); }
-
-    input:focus, select:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 4px rgba(255, 215, 111, 0.16);
-    }
-
-    select option { background: #2b1055; color: var(--text); }
-
-    input[readonly] { color: var(--teal); font-weight: 600; }
-
-    .button {
-      padding: 12px 20px;
-      border: 0;
-      border-radius: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-    }
-
-    .button:hover { transform: translateY(-2px); filter: brightness(1.08); }
-    .button:active { transform: translateY(0); }
-
-    .button-primary {
-      color: #2b1055;
-      background: linear-gradient(135deg, var(--gold) 0%, var(--lantern) 100%);
-      box-shadow: 0 8px 24px rgba(255, 159, 69, 0.4);
-    }
-
-    .button-secondary {
-      color: var(--text);
-      border: 1px solid var(--glass-line);
-      background: var(--glass);
-    }
-
-    .button-danger {
-      color: #fff0f0;
-      background: linear-gradient(135deg, #ff7b7b, var(--matsuri-red));
-      box-shadow: 0 8px 24px rgba(230, 57, 70, 0.35);
-    }
-
-    .button-line {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: #062e17;
-      background: linear-gradient(135deg, #7ff0a8, #06c755);
-      box-shadow: 0 8px 24px rgba(6, 199, 85, 0.35);
-    }
-
-    .button-small { padding: 9px 14px; font-size: 14px; }
-
-    .line-status {
-      padding: 7px 14px;
-      border-radius: 20px;
-      font-size: 13px;
-      color: var(--text-dim);
-      border: 1px solid var(--glass-line);
-      background: var(--glass);
-    }
-
-    .line-status.connected {
-      color: #0d3b23;
-      border-color: transparent;
-      background: linear-gradient(135deg, #7ff0a8, #06c755);
-    }
-
-    .line-status.error {
-      color: #fff0f0;
-      border-color: transparent;
-      background: linear-gradient(135deg, #ff7b7b, var(--matsuri-red));
-    }
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+    .btn-line { color: #062e17; background: linear-gradient(135deg, #7ff0a8, var(--line)); box-shadow: 0 8px 24px rgba(6,199,85,.35); }
+    .btn-gold { color: #2b1055; background: linear-gradient(135deg, var(--gold), var(--lantern)); box-shadow: 0 8px 24px rgba(255,159,69,.4); }
+    .btn-ghost { color: var(--text); background: var(--glass); border: 1px solid var(--glass-line); }
+    .btn-small { padding: 8px 13px; font-size: 13px; border-radius: 11px; }
+    .btn-block { width: 100%; }
 
     .hidden { display: none !important; }
 
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-      flex-wrap: wrap;
+    /* ===== ส่วนแนะนำ ===== */
+    .hero { text-align: center; margin-bottom: 22px; }
+    .hero h1 {
+      margin: 0 0 8px; font-family: "Mitr", sans-serif; font-weight: 600;
+      font-size: clamp(26px, 6vw, 38px);
+      text-shadow: 0 0 26px rgba(255, 215, 111, .4);
+    }
+    .hero p { margin: 0; color: var(--dim); font-size: 16px; }
+
+    .announce {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      margin: 0 auto 24px; padding: 14px 18px; max-width: 520px;
+      border-radius: 16px; text-align: center;
+      font-family: "Mitr", sans-serif; font-size: 18px; color: #fff4d6;
+      border: 1px solid rgba(255, 215, 111, .5);
+      background: linear-gradient(135deg, rgba(255,159,69,.22), rgba(255,107,157,.18));
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 111, .35); }
+      50% { box-shadow: 0 0 0 10px rgba(255, 215, 111, 0); }
     }
 
-    .alert {
-      display: none;
-      margin-bottom: 18px;
-      padding: 14px 18px;
-      border-radius: 14px;
-      font-weight: 400;
-      backdrop-filter: blur(10px);
+    /* ===== การ์ด ===== */
+    .card {
+      position: relative; margin-bottom: 20px; padding: 22px;
+      border: 1px solid var(--glass-line); border-radius: 20px;
+      background: var(--glass); backdrop-filter: blur(16px);
+      box-shadow: 0 10px 34px rgba(0, 0, 0, .32); overflow: hidden;
+    }
+    .card::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--pink), var(--teal));
+    }
+    .card-title {
+      margin: 0 0 16px; font-family: "Mitr", sans-serif; font-weight: 600;
+      font-size: 20px; color: var(--gold);
     }
 
-    .alert.show { display: block; animation: fade-in 0.3s ease; }
+    /* ขั้นตอนสั่งซื้อ */
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .step {
+      padding: 16px 12px; text-align: center; border-radius: 16px;
+      background: rgba(12, 6, 26, .45); border: 1px solid rgba(255,255,255,.08);
+    }
+    .step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; margin-bottom: 10px; border-radius: 50%;
+      font-family: "Mitr", sans-serif; font-weight: 600; font-size: 18px; color: #2b1055;
+      background: linear-gradient(135deg, var(--gold), var(--lantern));
+      box-shadow: 0 0 18px rgba(255, 215, 111, .55);
+    }
+    .step-title { font-weight: 600; margin-bottom: 4px; }
+    .step-text { font-size: 13px; color: var(--dim); line-height: 1.5; }
 
-    .alert-success {
-      color: #d9fff0;
-      border: 1px solid rgba(46, 196, 182, 0.5);
-      background: rgba(46, 196, 182, 0.16);
+    .info-text { margin: 0 0 16px; line-height: 1.7; font-size: 16px; }
+    .button-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .tip {
+      margin-top: 14px; padding: 12px 16px; border-radius: 12px; font-size: 14px;
+      color: #d9fff0; background: rgba(46, 196, 182, .14); border: 1px solid rgba(46, 196, 182, .4);
     }
 
-    .alert-error {
-      color: #ffe0e0;
-      border: 1px solid rgba(230, 57, 70, 0.5);
-      background: rgba(230, 57, 70, 0.18);
-    }
-
-    .notice {
-      margin-bottom: 22px;
-      padding: 14px 18px;
-      border-radius: 14px;
-      color: #fff4d6;
-      border: 1px solid rgba(255, 215, 111, 0.45);
-      background: rgba(255, 159, 69, 0.14);
-      backdrop-filter: blur(10px);
-    }
-
-    .empty {
-      padding: 34px;
+    /* บัญชีธนาคาร */
+    .bank-card {
       text-align: center;
-      color: var(--text-dim);
+      background:
+        radial-gradient(circle at 85% 15%, rgba(255, 107, 157, .25), transparent 45%),
+        radial-gradient(circle at 10% 90%, rgba(255, 215, 111, .18), transparent 45%),
+        var(--glass);
+    }
+    .bank-name { font-family: "Mitr", sans-serif; font-size: 22px; color: var(--pink); margin-bottom: 14px; }
+    .acc-label { font-size: 13px; color: var(--dim); }
+    .acc-number {
+      margin: 6px 0 16px;
+      font-family: "Mitr", sans-serif; font-weight: 600;
+      font-size: clamp(28px, 7vw, 40px); letter-spacing: 3px;
+      color: var(--gold); text-shadow: 0 0 22px rgba(255, 215, 111, .6);
+      user-select: all;
+    }
+    .acc-owner { font-size: 18px; line-height: 1.8; margin-bottom: 18px; }
+    .acc-owner .or { font-size: 14px; color: var(--dim); }
+
+    .slip-note {
+      margin-top: 18px; padding: 14px; border-radius: 14px;
+      font-family: "Mitr", sans-serif; font-size: 17px; color: #fff4d6;
+      background: rgba(255, 159, 69, .16); border: 1px dashed rgba(255, 215, 111, .55);
     }
 
-    .stock-low {
-      color: var(--matsuri-pink);
-      font-weight: 600;
-      text-shadow: 0 0 14px rgba(255, 107, 157, 0.6);
+    .warn {
+      margin-top: 14px; font-size: 13px; color: var(--dim);
     }
 
-    .footer-note {
-      margin-top: 30px;
-      text-align: center;
-      font-size: 13px;
-      color: var(--text-dim);
-    }
+    .footer-note { text-align: center; font-size: 13px; color: var(--dim); margin-top: 24px; }
 
-    @media (max-width: 860px) {
-      .summary-grid { grid-template-columns: repeat(2, 1fr); }
-      .form-grid { grid-template-columns: 1fr; }
-      .header { flex-direction: column; align-items: flex-start; }
-      .section-header { flex-direction: column; align-items: flex-start; }
-      .page-title { font-size: 25px; }
+    /* แถบปุ่มติดด้านล่าง */
+    .bottom-bar {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+      display: flex; gap: 10px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+      background: rgba(26, 11, 46, .92); backdrop-filter: blur(12px);
+      border-top: 1px solid var(--glass-line);
     }
+    .bottom-bar .btn { flex: 1; }
 
-    @media (max-width: 520px) {
-      .summary-grid { grid-template-columns: 1fr; }
-      .tabs { flex-direction: column; }
-      .header-right { width: 100%; }
+    /* แจ้งเตือนลอย */
+    .toast {
+      position: fixed; left: 50%; bottom: 96px; z-index: 50;
+      transform: translateX(-50%) translateY(20px);
+      padding: 12px 20px; border-radius: 14px; font-size: 15px;
+      color: #062e17; background: linear-gradient(135deg, #7ff0a8, var(--line));
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
+      opacity: 0; pointer-events: none; transition: all .3s ease;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 720px) {
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .button-row { grid-template-columns: 1fr; }
+      .brand-sub { display: none; }
+      #effectToggle { display: none; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -697,23 +320,19 @@
   <!-- ฉากหลังเทศกาล -->
   <div class="scene" aria-hidden="true">
     <div class="stars"></div>
-
-    <div class="hanabi hanabi-1"></div>
-    <div class="hanabi hanabi-2"></div>
-    <div class="hanabi hanabi-3"></div>
-    <div class="hanabi hanabi-4"></div>
-    <div class="hanabi hanabi-5"></div>
-
-    <div class="lantern-float lantern-a"></div>
-    <div class="lantern-float lantern-b"></div>
-    <div class="lantern-float lantern-c"></div>
-    <div class="lantern-float lantern-d"></div>
-    <div class="lantern-float lantern-e"></div>
-
+    <div class="hanabi h1"></div>
+    <div class="hanabi h2"></div>
+    <div class="hanabi h3"></div>
+    <div class="hanabi h4"></div>
+    <div class="hanabi h5"></div>
+    <div class="lantern-float la"></div>
+    <div class="lantern-float lb"></div>
+    <div class="lantern-float lc"></div>
+    <div class="lantern-float ld"></div>
     <div class="river"></div>
-    <div class="krathong krathong-1"></div>
-    <div class="krathong krathong-2"></div>
-    <div class="krathong krathong-3"></div>
+    <div class="krathong"></div>
+    <div class="krathong k2"></div>
+    <div class="krathong k3"></div>
   </div>
 
   <div class="noren"></div>
@@ -721,1153 +340,252 @@
   <header class="header">
     <div class="brand-wrap">
       <div class="chochin"></div>
-
       <div>
-        <div class="brand">มหาจำเริญโกดัง</div>
-        <div class="brand-sub">holiday shop</div>
+        <div class="brand">Holiday Firework</div>
+        <div class="brand-sub">FESTIVAL SHOP</div>
       </div>
     </div>
 
     <div class="header-right">
-      <span id="lineStatus" class="line-status">กำลังตรวจสอบ LINE</span>
-    
-      <button id="shareLineButton" class="button button-line button-small" type="button">
-        แชร์ไปยัง LINE
-      </button>
-
-      <button id="copyLinkButton" class="button button-secondary button-small" type="button">
-        คัดลอกลิงก์
-      </button>
-
+      <button id="shareButton" class="btn btn-line btn-small" type="button">แชร์ไปยัง LINE</button>
+      <button id="effectToggle" class="btn btn-ghost btn-small" type="button">ปิดเอฟเฟกต์</button>
+      <button id="closeLiffButton" class="btn btn-ghost btn-small hidden" type="button">ปิด</button>
     </div>
   </header>
 
   <main class="container">
-    <div class="tabs">
-      <button class="tab-button active" data-view="customerView" style="display: none;">หน้าลูกค้า</button>
-      <button class="tab-button" data-view="adminView" style="display: none;">หน้าพนักงาน</button>
-    </div>
-
-    <div id="globalAlert" class="alert"></div>
-
-    <!-- หน้าลูกค้า -->
-    <section id="customerView" class="view active">
-      <h1 class="page-title">รายการสินค้าในคลัง</h1>
-      <p class="subtitle">ตรวจสอบสินค้า จำนวนที่จอง และวันหมดอายุของสัญญา</p>
-
-      <div id="customerNotice"></div>
-
-      <div class="summary-grid">
-        <div class="card summary-card">
-          <div class="summary-label">รายการที่กำลังใช้งาน</div>
-          <div id="activeCount" class="summary-value glow-gold">0</div>
-        </div>
-
-        <div class="card summary-card">
-          <div class="summary-label">จำนวนสินค้าที่จองรวม</div>
-          <div id="reservedTotal" class="summary-value glow-teal">0</div>
-        </div>
-
-        <div class="card summary-card">
-          <div class="summary-label">ใกล้หมดอายุ</div>
-          <div id="warningCount" class="summary-value glow-orange">0</div>
-        </div>
-
-        <div class="card summary-card">
-          <div class="summary-label">หมดอายุแล้ว</div>
-          <div id="expiredCount" class="summary-value glow-pink">0</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="section-header">
-          <h2 class="section-title">รายการจองของฉัน</h2>
-
-          <div class="header-right">
-            <button id="shareSummaryButton" class="button button-line button-small" type="button">
-              ส่งสรุปเข้า LINE
-            </button>
-          </div>
-        </div>
-
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>รหัส</th>
-                <th>สินค้า</th>
-                <th>จำนวน</th>
-                <th>วันที่เริ่ม</th>
-                <th>วันที่สิ้นสุด</th>
-                <th>วันคงเหลือ</th>
-                <th>สถานะ</th>
-              </tr>
-            </thead>
-            <tbody id="customerReservationRows"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <p class="footer-note">ข้อมูลทดลองเก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น</p>
+    <section class="hero">
+      <h1>🎆 วิธีสั่งซื้อสินค้า 🎇</h1>
+      <p>เลือกสินค้าที่ชอบ แคปหน้าจอ แล้วส่งในไลน์ทางร้านได้เลยค่ะ</p>
     </section>
 
-    <!-- หน้าพนักงาน -->
-    <section id="adminView" class="view">
-      <h1 class="page-title">ระบบจัดการโกดัง</h1>
-      <p class="subtitle">ตรวจสอบสต็อกและสร้างรายการจองให้ลูกค้า</p>
+    <div class="announce">🔔 เว็บรออัปเดตของใหม่ 🔔</div>
 
-      <div class="notice">
-        หน้านี้เป็นตัวอย่างสำหรับพนักงาน ยังไม่ได้ติดตั้งระบบล็อกอินและกำหนดสิทธิ์จริง
-      </div>
+    <!-- ขั้นตอน -->
+    <section class="card">
+      <h2 class="card-title">สั่งง่าย ๆ 4 ขั้นตอน</h2>
 
-      <div class="summary-grid">
-        <div class="card summary-card">
-          <div class="summary-label">จำนวนสินค้า</div>
-          <div id="productCount" class="summary-value glow-gold">0</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-title">เลือกสินค้า</div>
+          <div class="step-text">ดูสินค้าในเว็บของร้าน</div>
         </div>
-
-        <div class="card summary-card">
-          <div class="summary-label">สต็อกจริงรวม</div>
-          <div id="actualStockTotal" class="summary-value glow-pink">0</div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-title">แคปหน้าจอ</div>
+          <div class="step-text">แคปสินค้าที่สนใจไว้</div>
         </div>
-
-        <div class="card summary-card">
-          <div class="summary-label">ยอดจองปัจจุบัน</div>
-          <div id="currentReservedTotal" class="summary-value glow-orange">0</div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-title">ส่งในไลน์</div>
+          <div class="step-text">ส่งรูปให้แอดมินในไลน์ร้าน</div>
         </div>
-
-        <div class="card summary-card">
-          <div class="summary-label">จำนวนพร้อมจอง</div>
-          <div id="availableTotal" class="summary-value glow-teal">0</div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-bottom: 22px;">
-        <div class="section-header">
-          <h2 class="section-title">สต็อกสินค้า</h2>
-
-          <button id="shareStockButton" class="button button-line button-small" type="button">
-            แชร์สต็อกเข้า LINE
-          </button>
-        </div>
-
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>สินค้า</th>
-                <th>ประเภท</th>
-                <th>สต็อกจริง</th>
-                <th>เปิดให้จอง</th>
-                <th>ถูกจองแล้ว</th>
-                <th>พร้อมจอง</th>
-                <th>หน่วย</th>
-              </tr>
-            </thead>
-            <tbody id="productRows"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="card" style="margin-bottom: 22px;">
-        <h2 class="section-title">สร้างรายการจอง</h2>
-
-        <form id="reservationForm">
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="bookingCustomer">ลูกค้า</label>
-              <select id="bookingCustomer" required></select>
-            </div>
-
-            <div class="form-group">
-              <label for="bookingProduct">สินค้า</label>
-              <select id="bookingProduct" required></select>
-            </div>
-
-            <div class="form-group">
-              <label for="bookingQuantity">จำนวนที่จอง</label>
-              <input id="bookingQuantity" type="number" min="1" placeholder="ตัวอย่าง 20" required>
-            </div>
-
-            <div class="form-group">
-              <label for="bookingStart">วันที่เริ่ม</label>
-              <input id="bookingStart" type="date" required>
-            </div>
-
-            <div class="form-group">
-              <label for="bookingEnd">วันที่สิ้นสุด</label>
-              <input id="bookingEnd" type="date" required>
-            </div>
-
-            <div class="form-group">
-              <label for="availablePreview">จำนวนพร้อมจองในช่วงที่เลือก</label>
-              <input id="availablePreview" type="text" value="-" readonly>
-            </div>
-          </div>
-
-          <div class="actions">
-            <button class="button button-primary" type="submit">บันทึกการจอง</button>
-            <button id="resetDataButton" class="button button-danger" type="button">
-              คืนค่าข้อมูลทดลอง
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <div class="card">
-        <div class="section-header">
-          <h2 class="section-title">รายการจองทั้งหมด</h2>
-        </div>
-
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>รหัส</th>
-                <th>ลูกค้า</th>
-                <th>สินค้า</th>
-                <th>จำนวน</th>
-                <th>ช่วงวันที่</th>
-                <th>สถานะ</th>
-              </tr>
-            </thead>
-            <tbody id="adminReservationRows"></tbody>
-          </table>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-title">โอนและแจ้งสลิป</div>
+          <div class="step-text">ส่งสลิป ชื่อ และที่อยู่จัดส่ง</div>
         </div>
       </div>
     </section>
+
+    <!-- ลิงก์ร้าน -->
+    <section class="card">
+      <h2 class="card-title">🛍️ เลือกสินค้าและติดต่อร้าน</h2>
+
+      <p class="info-text">
+        ลูกค้าเลือกในเว็บของร้านได้เลยนะคะ สนใจสินค้าตัวไหน
+        แคปแล้วส่งในไลน์ทางร้านได้เลยค่ะ
+      </p>
+
+      <div class="button-row">
+        <button class="btn btn-gold btn-block" type="button" data-link="website">🌐 เปิดเว็บดูสินค้า</button>
+        <button class="btn btn-line btn-block" type="button" data-link="line">💬 แอดไลน์ร้าน</button>
+      </div>
+
+      <div class="tip">
+        📷 หากรูปในเว็บไม่โหลด ทักแอดมินให้ส่งรายการสินค้าให้ได้เลยนะคะ
+        <div style="margin-top: 10px;">
+          <button id="requestListButton" class="btn btn-ghost btn-small" type="button">ขอรายการสินค้าจากแอดมิน</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- บัญชีธนาคาร -->
+    <section class="card bank-card">
+      <h2 class="card-title">💳 ช่องทางชำระเงิน</h2>
+
+      <div class="bank-name">⭐️ ธนาคารออมสิน ⭐️</div>
+
+      <div class="acc-label">เลขที่บัญชี</div>
+      <div id="accountNumber" class="acc-number">020112636640</div>
+
+      <div class="acc-owner">
+        ✅ ณัฐริกา ศิลปชัย ✅<br>
+        <span class="or">หรือ</span><br>
+        กัญญารัตน์ ศิลปชัย
+      </div>
+
+      <button id="copyAccountButton" class="btn btn-gold" type="button">📋 คัดลอกเลขบัญชี</button>
+
+      <div class="slip-note">🎆 โอนแล้วแจ้งสลิป ชื่อ และที่อยู่ได้เลยค่ะ 🎇</div>
+
+      <div class="warn">กรุณาตรวจสอบชื่อบัญชีให้ตรงกับข้างต้นก่อนโอนทุกครั้ง</div>
+    </section>
+
+    <p class="footer-note">ขอบคุณที่อุดหนุนค่ะ 🎇</p>
   </main>
-<script>
-  /* ===========================================
-     ตั้งค่า LIFF
-     =========================================== */
-  const LIFF_ID = "2011773702-rRi1WQNm";
-  const LIFF_URL = "https://liff.line.me/" + LIFF_ID;
 
-  let liffReady = false;
-  let lineProfile = null;
-
-  const STORAGE_KEY = "warehouse-booking-demo";
-  const EFFECT_KEY = "warehouse-booking-effect";
-
-  const addDays = (date, days) => {
-    const result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result.toISOString().slice(0, 10);
-  };
-
-  const todayText = new Date().toISOString().slice(0, 10);
-
-  const defaultData = {
-    customers: [
-      { id: 1, name: "บริษัท A" },
-      { id: 2, name: "บริษัท B" }
-    ],
-    products: [
-      {
-        id: 1,
-        name: "Box ขนาด L",
-        category: "กล่องสินค้า",
-        actualStock: 200,
-        reservableStock: 150,
-        unit: "กล่อง"
-      },
-      {
-        id: 2,
-        name: "Pallet",
-        category: "พาเลต",
-        actualStock: 100,
-        reservableStock: 80,
-        unit: "พาเลต"
-      },
-      {
-        id: 3,
-        name: "ตู้ควบคุมอุณหภูมิ",
-        category: "ห้องเย็น",
-        actualStock: 50,
-        reservableStock: 30,
-        unit: "ตู้"
-      }
-    ],
-    reservations: [
-      {
-        id: 1,
-        customerId: 1,
-        productId: 1,
-        quantity: 50,
-        startDate: addDays(todayText, -20),
-        endDate: addDays(todayText, 10),
-        status: "active"
-      },
-      {
-        id: 2,
-        customerId: 1,
-        productId: 2,
-        quantity: 20,
-        startDate: addDays(todayText, -10),
-        endDate: addDays(todayText, 5),
-        status: "active"
-      },
-      {
-        id: 3,
-        customerId: 2,
-        productId: 1,
-        quantity: 30,
-        startDate: addDays(todayText, 15),
-        endDate: addDays(todayText, 45),
-        status: "pending"
-      }
-    ]
-  };
-
-  let data = loadData();
-  let selectedCustomerId = 1;
-
-  function loadData() {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
-    }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
-    return JSON.parse(JSON.stringify(defaultData));
-  }
-
-  function saveData() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }
-
-  function formatDate(dateString) {
-    if (!dateString) return "-";
-    return new Intl.DateTimeFormat("th-TH", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric"
-    }).format(new Date(dateString));
-  }
-
-  function getDaysRemaining(endDate) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const end = new Date(endDate);
-    end.setHours(0, 0, 0, 0);
-
-    return Math.ceil((end - today) / 86400000);
-  }
-
-  function getReservationStatus(reservation) {
-    if (reservation.status === "cancelled") {
-      return { code: "cancelled", text: "ยกเลิกแล้ว", className: "badge-expired" };
-    }
-
-    const today = new Date(todayText);
-    const start = new Date(reservation.startDate);
-    const end = new Date(reservation.endDate);
-    const remaining = getDaysRemaining(reservation.endDate);
-
-    if (end < today) {
-      return { code: "expired", text: "หมดอายุ", className: "badge-expired" };
-    }
-    if (start > today) {
-      return { code: "pending", text: "รอเริ่มใช้งาน", className: "badge-pending" };
-    }
-    if (remaining <= 7) {
-      return { code: "warning", text: "ใกล้หมดอายุ", className: "badge-warning" };
-    }
-
-    return { code: "active", text: "ปกติ", className: "badge-normal" };
-  }
-
-  function isOverlap(firstStart, firstEnd, secondStart, secondEnd) {
-    return firstStart <= secondEnd && firstEnd >= secondStart;
-  }
-
-  function getReservedQuantity(productId, startDate, endDate) {
-    return data.reservations
-      .filter(reservation => {
-        const status = getReservationStatus(reservation);
-        return (
-          reservation.productId === productId &&
-          !["expired", "cancelled"].includes(status.code) &&
-          isOverlap(reservation.startDate, reservation.endDate, startDate, endDate)
-        );
-      })
-      .reduce((total, reservation) => total + reservation.quantity, 0);
-  }
-
-  function getCurrentReservedQuantity(productId) {
-    return data.reservations
-      .filter(reservation => {
-        const status = getReservationStatus(reservation);
-        return (
-          reservation.productId === productId &&
-          ["active", "warning"].includes(status.code)
-        );
-      })
-      .reduce((total, reservation) => total + reservation.quantity, 0);
-  }
-
-  function showAlert(message, type = "success") {
-    const alert = document.getElementById("globalAlert");
-    if (!alert) return;
-
-    alert.textContent = message;
-    alert.className = "alert show " + (type === "error" ? "alert-error" : "alert-success");
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    setTimeout(() => {
-      alert.className = "alert";
-    }, 4000);
-  }
-
-  /* ===========================================
-     LINE LIFF Logic
-     =========================================== */
-
-  function setLineStatus(text, state = "") {
-    const element = document.getElementById("lineStatus");
-    if (element) {
-      element.textContent = text;
-      element.className = "line-status " + state;
-    }
-  }
-
-  function isLiffConfigured() {
-    return (
-      typeof liff !== "undefined" &&
-      LIFF_ID &&
-      !LIFF_ID.startsWith("2000000000")
-    );
-  }
-
-  async function initLiff() {
-    if (typeof liff === "undefined") {
-      setLineStatus("โหลด LIFF SDK ไม่สำเร็จ", "error");
-      return;
-    }
-
-    if (!isLiffConfigured()) {
-      setLineStatus("โหมดทดลอง ยังไม่ได้ตั้งค่า LIFF ID");
-      return;
-    }
-
-    try {
-      await liff.init({ liffId: LIFF_ID });
-      liffReady = true;
-
-      const closeBtn = document.getElementById("closeLiffButton");
-      if (liff.isInClient() && closeBtn) {
-        closeBtn.classList.remove("hidden");
-      }
-
-      if (liff.isLoggedIn()) {
-        lineProfile = await liff.getProfile();
-        setLineStatus("LINE: " + lineProfile.displayName, "connected");
-        matchCustomerByLineName(lineProfile.displayName);
-      } else {
-        setLineStatus("ยังไม่ได้เข้าสู่ระบบ LINE");
-      }
-    } catch (error) {
-      setLineStatus("เชื่อมต่อ LINE ไม่สำเร็จ", "error");
-      console.error("LIFF init error:", error);
-    }
-  }
-
-  function matchCustomerByLineName(displayName) {
-    const matched = data.customers.find(customer => customer.name === displayName);
-    if (matched) {
-      selectedCustomerId = matched.id;
-      renderSelects();
-      renderCustomerDashboard();
-    }
-  }
-
-  function buildCustomerSummaryText() {
-
-    const customer = data.customers.find(item => item.id === selectedCustomerId);
-
-    const reservations = 'ทดสอบระบบ';
-
-    const lines = [];
-
-
-
-    lines.push("สรุปการจองโกดัง");
-
-    lines.push("ลูกค้า: " + (customer ? customer.name : "-"));
-
-    lines.push("ข้อมูล ณ วันที่ " + formatDate(todayText));
-
-    lines.push("");
-
-
-
-    if (reservations.length === 0) {
-
-      lines.push("ยังไม่มีรายการจอง");
-
-    } else {
-
-      reservations.forEach(reservation => {
-
-        const product = data.products.find(item => item.id === reservation.productId);
-
-        const status = getReservationStatus(reservation);
-
-        const remaining = getDaysRemaining(reservation.endDate);
-
-
-
-        let remainingText = "เหลือ " + remaining + " วัน";
-
-        if (remaining === 0) remainingText = "หมดอายุวันนี้";
-
-        if (remaining < 0) remainingText = "หมดอายุแล้ว";
-
-
-
-        lines.push("RSV-" + String(reservation.id).padStart(4, "0") + " " + (product ? product.name : "-"));
-
-        lines.push("จำนวน " + reservation.quantity + " " + (product ? product.unit : "") + " | " + status.text);
-
-        lines.push(formatDate(reservation.startDate) + " ถึง " + formatDate(reservation.endDate) + " | " + remainingText);
-
-        lines.push("");
-
-      });
-
-    }
-
-
-
-    lines.push("เปิดระบบเพื่อดูรายละเอียด");
-
-    lines.push(getShareLink());
-
-
-
-    return lines.join("\n");
-
-  }
-  function buildCustomerSummaryFlex() {
-  const customer = data.customers.find(item => item.id === selectedCustomerId);
-  const reservations = data.reservations.filter(item => item.customerId === selectedCustomerId);
-
-  // สร้างเนื้อหารายการจองแต่ละรายการ
-  const reservationCards = reservations.length === 0 ? [
-    {
-      type: "text",
-      text: "ยังไม่มีรายการจอง",
-      color: "#94a3b8",
-      align: "center",
-      margin: "md"
-    }
-  ] : reservations.map(reservation => {
-    const product = data.products.find(item => item.id === reservation.productId);
-    const status = getReservationStatus(reservation);
-    const remaining = getDaysRemaining(reservation.endDate);
-
-    let remainingText = `เหลือ ${remaining} วัน`;
-    if (remaining === 0) remainingText = "หมดอายุวันนี้";
-    if (remaining < 0) remainingText = "หมดอายุแล้ว";
-
-    // สี Badge ตามสถานะ
-    let badgeBg = "#22c55e"; // ปกติ (เขียว)
-    if (status.code === "warning") badgeBg = "#f59e0b"; // ใกล้หมดอายุ (ส้ม)
-    if (status.code === "pending") badgeBg = "#3b82f6"; // รอเริ่มใช้งาน (ฟ้า)
-    if (["expired", "cancelled"].includes(status.code)) badgeBg = "#ef4444"; // หมดอายุ/ยกเลิก (แดง)
-
-    return {
-      type: "box",
-      layout: "vertical",
-      backgroundColor: "#f8fafc",
-      cornerRadius: "8px",
-      paddingAll: "12px",
-      margin: "md",
-      contents: [
-        {
-          type: "box",
-          layout: "horizontal",
-          contents: [
-            {
-              type: "text",
-              text: `RSV-${String(reservation.id).padStart(4, "0")}`,
-              weight: "bold",
-              size: "xs",
-              color: "#64748b",
-              gravity: "center"
-            },
-            {
-              type: "box",
-              layout: "vertical",
-              backgroundColor: badgeBg,
-              cornerRadius: "4px",
-              paddingStart: "6px",
-              paddingEnd: "6px",
-              paddingTop: "2px",
-              paddingBottom: "2px",
-              contents: [
-                {
-                  type: "text",
-                  text: status.text,
-                  size: "xxs",
-                  color: "#ffffff",
-                  weight: "bold"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          type: "text",
-          text: product ? product.name : "-",
-          weight: "bold",
-          size: "md",
-          color: "#0f172a",
-          margin: "sm"
-        },
-        {
-          type: "text",
-          text: `จำนวน ${reservation.quantity} ${product ? product.unit : ""}`,
-          size: "sm",
-          color: "#334155",
-          margin: "xs"
-        },
-        {
-          type: "separator",
-          margin: "sm",
-          color: "#e2e8f0"
-        },
-        {
-          type: "box",
-          layout: "horizontal",
-          margin: "sm",
-          contents: [
-            {
-              type: "text",
-              text: `${formatDate(reservation.startDate)} - ${formatDate(reservation.endDate)}`,
-              size: "xs",
-              color: "#64748b",
-              flex: 3
-            },
-            {
-              type: "text",
-              text: remainingText,
-              size: "xs",
-              color: status.code === "warning" ? "#d97706" : "#475569",
-              weight: "bold",
-              align: "end",
-              flex: 2
-            }
-          ]
-        }
-      ]
+  <!-- แถบปุ่มด้านล่าง -->
+  <nav class="bottom-bar">
+    <button class="btn btn-gold" type="button" data-link="website">ดูสินค้า</button>
+    <button class="btn btn-line" type="button" data-link="line">ทักไลน์สั่งซื้อ</button>
+  </nav>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    /* ===========================================
+       ข้อมูลร้าน แก้ไขได้ที่นี่จุดเดียว
+       =========================================== */
+    const SHOP = {
+      name: "Holiday Firework",
+      lineUrl: "https://lin.ee/rOh1mCa",
+      websiteUrl: "https://sites.google.com/view/holidayfirework/%E0%B8%AB%E0%B8%99%E0%B8%B2%E0%B9%81%E0%B8%A3%E0%B8%81",
+      bank: "ธนาคารออมสิน",
+      accountNumber: "020112636640",
+      accountNames: ["ณัฐริกา ศิลปชัย", "กัญญารัตน์ ศิลปชัย"]
     };
-  });
 
-  return {
-    type: "flex",
-    altText: `สรุปการจองโกดัง: ${customer ? customer.name : "ลูกค้า"}`,
-    contents: {
-      type: "bubble",
-      size: "mega",
-      header: {
-        type: "box",
-        layout: "vertical",
-        backgroundColor: "#0f172a",
-        paddingAll: "16px",
-        contents: [
-          {
-            type: "text",
-            text: "📦 สรุปการจองโกดัง",
-            weight: "bold",
-            color: "#38bdf8",
-            size: "sm"
-          },
-          {
-            type: "text",
-            text: `ลูกค้า: ${customer ? customer.name : "-"}`,
-            weight: "bold",
-            color: "#ffffff",
-            size: "lg",
-            margin: "xs"
-          },
-          {
-            type: "text",
-            text: `ข้อมูล ณ วันที่ ${formatDate(todayText)}`,
-            color: "#94a3b8",
-            size: "xs",
-            margin: "xs"
-          }
-        ]
-      },
-      body: {
-        type: "box",
-        layout: "vertical",
-        paddingAll: "16px",
-        contents: reservationCards
-      },
-      footer: {
-        type: "box",
-        layout: "vertical",
-        paddingAll: "12px",
-        contents: [
-          {
-            type: "button",
-            action: {
-              type: "uri",
-              label: "เปิดระบบเพื่อดูรายละเอียด",
-              uri: getShareLink()
-            },
-            style: "primary",
-            color: "#0284c7",
-            height: "sm"
-          }
-        ]
+    /* ใส่ LIFF ID จาก LINE Developers (ถ้ายังไม่มี ปล่อยไว้แบบนี้ได้) */
+    const LIFF_ID = "2000000000-abcdefgh";
+    const EFFECT_KEY = "holiday-firework-effect";
+
+    let liffReady = false;
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 2500);
+    }
+
+    function isLiffConfigured() {
+      return typeof liff !== "undefined" && !LIFF_ID.startsWith("2000000000");
+    }
+
+    async function initLiff() {
+      if (!isLiffConfigured()) return;
+
+      try {
+        await liff.init({ liffId: LIFF_ID });
+        liffReady = true;
+
+        if (liff.isInClient()) {
+          document.getElementById("closeLiffButton").classList.remove("hidden");
+        }
+      } catch (error) {
+        console.error("LIFF init error:", error);
       }
     }
-  };
-}
 
-  function buildStockSummaryText() {
-    const lines = [];
-    lines.push("สรุปสต็อกโกดัง");
-    lines.push("ข้อมูล ณ วันที่ " + formatDate(todayText));
-    lines.push("");
+    /* เปิดลิงก์: ในแอป LINE ให้เปิดเว็บร้านด้วยเบราว์เซอร์ภายนอก เพื่อให้รูปโหลดได้ดีกว่า */
+    function openLink(type) {
+      const url = type === "line" ? SHOP.lineUrl : SHOP.websiteUrl;
 
-    data.products.forEach(product => {
-      const reserved = getCurrentReservedQuantity(product.id);
-      const available = Math.max(product.reservableStock - reserved, 0);
-
-      lines.push(product.name);
-      lines.push(
-        "จริง " + product.actualStock +
-        " | เปิดจอง " + product.reservableStock +
-        " | จองแล้ว " + reserved +
-        " | พร้อมจอง " + available + " " + product.unit
-      );
-      lines.push("");
-    });
-
-    lines.push("เปิดระบบเพื่อดูรายละเอียด");
-    lines.push(getShareLink());
-
-    return lines.join("\n");
-  }
-
-  function getShareLink() {
-    if (isLiffConfigured()) return LIFF_URL;
-    if (window.location.protocol.startsWith("http")) return window.location.href;
-    return "ยังไม่ได้อัปโหลดเว็บขึ้นออนไลน์";
-  }
-
-  async function shareToLine(message) {
-    if (liffReady && liff.isApiAvailable("shareTargetPicker")) {
-      if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: window.location.href });
+      if (liffReady && liff.isInClient()) {
+        liff.openWindow({ url, external: type === "website" });
         return;
       }
 
-      try {
-        const result = await liff.shareTargetPicker([{ type: "text", text: message }]);
-        if (result) {
-          showAlert("ส่งข้อมูลเข้า LINE เรียบร้อยแล้ว");
-        } else {
-          showAlert("ยกเลิกการแชร์");
+      window.open(url, "_blank", "noopener");
+    }
+
+    function buildShareText() {
+      return [
+        "🎆 " + SHOP.name + " 🎇",
+        "",
+        "วิธีการสั่ง ลูกค้าสนใจสินค้าตัวไหน แคปแล้วส่งในไลน์ทางร้านได้เลยนะคะ",
+        SHOP.lineUrl,
+        "",
+        "ลูกค้าเลือกในเว็บของร้านได้เลยนะคะ หากรูปไม่โหลด ให้แอดมินส่งรายการให้ได้เลยนะคะ",
+        "🔔 เว็บรออัปเดตของใหม่ 🔔",
+        SHOP.websiteUrl,
+        "",
+        "⭐️ " + SHOP.bank + " ⭐️",
+        "🍀 " + SHOP.accountNumber + " 🍀",
+        "✅ " + SHOP.accountNames[0] + " ✅",
+        "หรือ " + SHOP.accountNames[1],
+        "",
+        "🎆 โอนแจ้งสลิป ชื่อ ที่อยู่ได้เลยค่ะ 🎇"
+      ].join("\n");
+    }
+
+    async function shareToLine() {
+      const message = buildShareText();
+
+      if (liffReady && liff.isApiAvailable("shareTargetPicker")) {
+        if (!liff.isLoggedIn()) {
+          liff.login({ redirectUri: window.location.href });
+          return;
         }
+
+        try {
+          const result = await liff.shareTargetPicker([{ type: "text", text: message }]);
+          showToast(result ? "แชร์เรียบร้อยแล้ว" : "ยกเลิกการแชร์");
+        } catch (error) {
+          console.error(error);
+          showToast("แชร์ไม่สำเร็จ ลองใหม่อีกครั้ง");
+        }
+        return;
+      }
+
+      window.open("https://line.me/R/msg/text/?" + encodeURIComponent(message), "_blank");
+    }
+
+    async function copyText(text, successMessage) {
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast(successMessage);
       } catch (error) {
-        console.error("shareTargetPicker error:", error);
-        showAlert("แชร์ผ่าน LINE ไม่สำเร็จ", "error");
+        window.prompt("คัดลอกข้อความนี้", text);
       }
-      return;
     }
 
-    const shareUrl = "https://line.me/R/msg/text/?" + encodeURIComponent(message);
-    window.open(shareUrl, "_blank");
-    showAlert("เปิดหน้าต่างแชร์ของ LINE แล้ว");
-  }
-
-  async function copyShareLink() {
-    const link = getShareLink();
-    try {
-      await navigator.clipboard.writeText(link);
-      showAlert("คัดลอกลิงก์เรียบร้อย: " + link);
-    } catch (error) {
-      window.prompt("คัดลอกลิงก์นี้เพื่อส่งให้ลูกค้า", link);
-    }
-  }
-
-  /* ===========================================
-     Render Views
-     =========================================== */
-
-  function renderSelects() {
-    const customerOptions = data.customers
-      .map(customer => `<option value="${customer.id}">${customer.name}</option>`)
-      .join("");
-
-    const bookCust = document.getElementById("bookingCustomer");
-
-    if (bookCust) {
-      bookCust.innerHTML = customerOptions;
-    }
-
-    const productOptions = data.products
-      .map(product => `<option value="${product.id}">${product.name}</option>`)
-      .join("");
-
-    const bookProd = document.getElementById("bookingProduct");
-    if (bookProd) {
-      bookProd.innerHTML = productOptions;
-    }
-  }
-
-  function renderCustomerDashboard() {
-    const customer = data.customers.find(item => item.id === selectedCustomerId);
-    const reservations = data.reservations.filter(item => item.customerId === selectedCustomerId);
-
-    let activeCount = 0;
-    let warningCount = 0;
-    let expiredCount = 0;
-    let reservedTotal = 0;
-
-    reservations.forEach(reservation => {
-      const status = getReservationStatus(reservation);
-
-      if (["active", "warning"].includes(status.code)) {
-        activeCount++;
-        reservedTotal += reservation.quantity;
-      }
-      if (status.code === "warning") warningCount++;
-      if (status.code === "expired") expiredCount++;
+    /* ===== เชื่อมปุ่ม ===== */
+    document.querySelectorAll("[data-link]").forEach(button => {
+      button.addEventListener("click", () => openLink(button.dataset.link));
     });
 
-    if (document.getElementById("activeCount")) document.getElementById("activeCount").textContent = activeCount;
-    if (document.getElementById("reservedTotal")) document.getElementById("reservedTotal").textContent = reservedTotal;
-    if (document.getElementById("warningCount")) document.getElementById("warningCount").textContent = warningCount;
-    if (document.getElementById("expiredCount")) document.getElementById("expiredCount").textContent = expiredCount;
-    if (document.getElementById("customerNameLabel")) document.getElementById("customerNameLabel").textContent = customer ? customer.name : "-";
+    document.getElementById("shareButton").addEventListener("click", shareToLine);
 
-    const notice = document.getElementById("customerNotice");
-    if (notice) {
-      if (warningCount > 0) {
-        notice.innerHTML = `
-          <div class="notice">
-            มี ${warningCount} รายการที่จะหมดอายุภายใน 7 วัน
-            กรุณาติดต่อพนักงานหากต้องการต่ออายุ
-          </div>
-        `;
-      } else {
-        notice.innerHTML = "";
-      }
-    }
-
-    const rows = reservations
-      .map(reservation => {
-        const product = data.products.find(item => item.id === reservation.productId);
-        const status = getReservationStatus(reservation);
-        const remaining = getDaysRemaining(reservation.endDate);
-
-        let remainingText = `${remaining} วัน`;
-        if (remaining === 0) remainingText = "หมดอายุวันนี้";
-        if (remaining < 0) remainingText = "หมดอายุแล้ว";
-
-        return `
-          <tr>
-            <td>RSV-${String(reservation.id).padStart(4, "0")}</td>
-            <td>${product ? product.name : "-"}</td>
-            <td>${reservation.quantity}</td>
-            <td>${formatDate(reservation.startDate)}</td>
-            <td>${formatDate(reservation.endDate)}</td>
-            <td>${remainingText}</td>
-            <td><span class="badge ${status.className}">${status.text}</span></td>
-          </tr>
-        `;
-      })
-      .join("");
-
-    const custRows = document.getElementById("customerReservationRows");
-    if (custRows) {
-      custRows.innerHTML = rows || `<tr><td colspan="7" class="empty">ไม่พบรายการจอง</td></tr>`;
-    }
-  }
-
-  function renderAdminDashboard() {
-    let totalActual = 0;
-    let totalReserved = 0;
-    let totalAvailable = 0;
-
-    const productRowsData = data.products
-      .map(product => {
-        const reserved = getCurrentReservedQuantity(product.id);
-        const available = Math.max(product.reservableStock - reserved, 0);
-
-        totalActual += product.actualStock;
-        totalReserved += reserved;
-        totalAvailable += available;
-
-        const availableClass = available <= product.reservableStock * 0.1 ? "stock-low" : "";
-
-        return `
-          <tr>
-            <td>${product.name}</td>
-            <td>${product.category}</td>
-            <td>${product.actualStock}</td>
-            <td>${product.reservableStock}</td>
-            <td>${reserved}</td>
-            <td class="${availableClass}">${available}</td>
-            <td>${product.unit}</td>
-          </tr>
-        `;
-      })
-      .join("");
-
-    const productRows = document.getElementById("productRows");
-    if (productRows) productRows.innerHTML = productRowsData;
-
-    if (document.getElementById("productCount")) document.getElementById("productCount").textContent = data.products.length;
-    if (document.getElementById("actualStockTotal")) document.getElementById("actualStockTotal").textContent = totalActual;
-    if (document.getElementById("currentReservedTotal")) document.getElementById("currentReservedTotal").textContent = totalReserved;
-    if (document.getElementById("availableTotal")) document.getElementById("availableTotal").textContent = totalAvailable;
-
-    const reservationRows = [...data.reservations]
-      .sort((a, b) => b.id - a.id)
-      .map(reservation => {
-        const customer = data.customers.find(item => item.id === reservation.customerId);
-        const product = data.products.find(item => item.id === reservation.productId);
-        const status = getReservationStatus(reservation);
-
-        return `
-          <tr>
-            <td>RSV-${String(reservation.id).padStart(4, "0")}</td>
-            <td>${customer ? customer.name : "-"}</td>
-            <td>${product ? product.name : "-"}</td>
-            <td>${reservation.quantity}</td>
-            <td>${formatDate(reservation.startDate)} ถึง ${formatDate(reservation.endDate)}</td>
-            <td><span class="badge ${status.className}">${status.text}</span></td>
-          </tr>
-        `;
-      })
-      .join("");
-
-    const adminRows = document.getElementById("adminReservationRows");
-    if (adminRows) {
-      adminRows.innerHTML = reservationRows || `<tr><td colspan="6" class="empty">ไม่พบรายการจอง</td></tr>`;
-    }
-  }
-
-  function updateAvailablePreview() {
-    const prodEl = document.getElementById("bookingProduct");
-    const startEl = document.getElementById("bookingStart");
-    const endEl = document.getElementById("bookingEnd");
-    const output = document.getElementById("availablePreview");
-
-    if (!prodEl || !startEl || !endEl || !output) return;
-
-    const productId = Number(prodEl.value);
-    const startDate = startEl.value;
-    const endDate = endEl.value;
-
-    const product = data.products.find(item => item.id === productId);
-
-    if (!product || !startDate || !endDate) {
-      output.value = "-";
-      return;
-    }
-
-    if (endDate < startDate) {
-      output.value = "วันที่ไม่ถูกต้อง";
-      return;
-    }
-
-    const reserved = getReservedQuantity(productId, startDate, endDate);
-    const available = Math.max(product.reservableStock - reserved, 0);
-
-    output.value = `${available} ${product.unit}`;
-  }
-
-  function renderAll() {
-    renderSelects();
-    renderCustomerDashboard();
-    renderAdminDashboard();
-    updateAvailablePreview();
-  }
-
-  function setDefaultDates() {
-    const startInput = document.getElementById("bookingStart");
-    const endInput = document.getElementById("bookingEnd");
-
-    if (startInput) {
-      startInput.value = todayText;
-      startInput.min = todayText;
-    }
-    if (endInput) {
-      endInput.value = addDays(todayText, 30);
-      endInput.min = todayText;
-    }
-  }
-
-  function restoreEffectMode() {
-    const toggleBtn = document.getElementById("effectToggle");
-    if (localStorage.getItem(EFFECT_KEY) === "off") {
-      document.body.classList.add("plain-mode");
-      if (toggleBtn) toggleBtn.textContent = "เปิดเอฟเฟกต์";
-    }
-  }
-
-  /* ===========================================
-     Event Listeners (รันหลังจาก DOM โหลดเสร็จเท่านั้น)
-     =========================================== */
-
-  document.addEventListener("DOMContentLoaded", () => {
-    // 1. ตั้งค่าพื้นฐาน
-    restoreEffectMode();
-    setDefaultDates();
-
-    // 2. การสลับแท็บ หน้าเว็บ
-    document.querySelectorAll(".tab-button").forEach(button => {
-      button?.addEventListener("click", () => {
-        document.querySelectorAll(".tab-button").forEach(item => item.classList.remove("active"));
-        document.querySelectorAll(".view").forEach(view => view.classList.remove("active"));
-
-        button.classList.add("active");
-        const targetView = button.dataset.view;
-        document.getElementById(targetView)?.classList.add("active");
-      });
+    document.getElementById("copyAccountButton").addEventListener("click", () => {
+      copyText(SHOP.accountNumber, "คัดลอกเลขบัญชีแล้ว ✅");
     });
 
-    // 4. การแชร์และการใช้งาน LINE LIFF    
-    document.getElementById("shareSummaryButton")?.addEventListener("click", () => {
-      shareToLine(buildCustomerSummaryText());
+    document.getElementById("requestListButton").addEventListener("click", async () => {
+      await copyText("สวัสดีค่ะ รูปในเว็บไม่โหลด รบกวนส่งรายการสินค้าให้หน่อยค่ะ",
+        "คัดลอกข้อความแล้ว วางในแชตได้เลย");
+      openLink("line");
     });
 
-// ปรับปรุง Event Listener สำหรับปุ่มแชร์
-document.getElementById("shareLineButton")?.addEventListener("click", async () => {
-  if (liffReady && liff.isApiAvailable("shareTargetPicker")) {
-    if (!liff.isLoggedIn()) {
-      liff.login({ redirectUri: window.location.href });
-      return;
-    }
-
-    try {
-      // ดึง Flex Message Payload
-      const flexMessage = buildCustomerSummaryFlex();
-      const result = await liff.shareTargetPicker([flexMessage]);
-
-      if (result) {
-        showAlert("ส่ง Flex Message เข้า LINE เรียบร้อยแล้ว");
-      } else {
-        showAlert("ยกเลิกการแชร์");
-      }
-    } catch (error) {
-      console.error("shareTargetPicker error:", error);
-      showAlert("แชร์ผ่าน LINE ไม่สำเร็จ", "error");
-    }
-  } else {
-    shareToLine(buildCustomerSummaryText());
-  }
-  
-});
-
-    document.getElementById("shareStockButton")?.addEventListener("click", () => {
-      shareToLine(buildStockSummaryText());
+    document.getElementById("closeLiffButton").addEventListener("click", () => {
+      if (liffReady && liff.isInClient()) liff.closeWindow();
     });
 
-    document.getElementById("copyLinkButton")?.addEventListener("click", copyShareLink);
-
-    document.getElementById("closeLiffButton")?.addEventListener("click", () => {
-      if (liffReady && liff.isInClient()) {
-        liff.closeWindow();
-      }
-    });
-
-    // 5. ปุ่มสลับเอฟเฟกต์
-    document.getElementById("effectToggle")?.addEventListener("click", () => {
-      document.body.classList.toggle("plain-mode");
-      const isPlain = document.body.classList.contains("plain-mode");
-      const toggleBtn = document.getElementById("effectToggle");
-
-      if (toggleBtn) {
-        toggleBtn.textContent = isPlain ? "เปิดเอฟเฟกต์" : "ปิดเอฟเฟกต์";
-      }
+    document.getElementById("effectToggle").addEventListener("click", () => {
+      const isPlain = document.body.classList.toggle("plain-mode");
+      document.getElementById("effectToggle").textContent = isPlain ? "เปิดเอฟเฟกต์" : "ปิดเอฟเฟกต์";
       localStorage.setItem(EFFECT_KEY, isPlain ? "off" : "on");
     });
 
-    // 6. บันทึกการจอง
-    document.getElementById("reservationForm")?.addEventListener("submit", event => {
-      event.preventDefault();
+    if (localStorage.getItem(EFFECT_KEY) === "off") {
+      document.body.classList.add("plain-mode");
+      document.getElementById("effectToggle").textContent = "เปิดเอฟเฟกต์";
+    }
 
-      const customerId = Number(document.getElementById("bookingCustomer")?.value);
-      const productId = Number(document.getElementById("bookingProduct")?.value);
-      const quantity = Number(document.getElementById("bookingQuantity")?.value);
-      const startDate = document.getElementById("bookingStart")?.value;
-      const endDate = document.getElementById("bookingEnd")?.value;
-
-      const product = data.products.find(item => item.id === productId);
-
-      if (!product) {
-        showAlert("ไม่พบข้อมูลสินค้า", "error");
-        return;
-      }
-
-      if (quantity <= 0) {
-        showAlert("จำนวนที่จองต้องมากกว่า 0", "error");
-        return;
-      }
-
-      if (endDate < startDate) {
-        showAlert("วันที่สิ้นสุดต้องไม่อยู่ก่อนวันที่เริ่ม", "error");
-        return;
-      }
-
-      const alreadyReserved = getReservedQuantity(productId, startDate, endDate);
-      const available = product.reservableStock - alreadyReserved;
-
-      if (quantity > available) {
-        showAlert(`จำนวนไม่เพียงพอ สามารถจองได้สูงสุด ${available} ${product.unit}`, "error");
-        return;
-      }
-
-      const newId = data.reservations.length > 0 ? Math.max(...data.reservations.map(item => item.id)) + 1 : 1;
-      const initialStatus = startDate > todayText ? "pending" : "active";
-
-      data.reservations.push({
-        id: newId,
-        customerId,
-        productId,
-        quantity,
-        startDate,
-        endDate,
-        status: initialStatus
-      });
-
-      saveData();
-      renderAll();
-
-      const qtyInput = document.getElementById("bookingQuantity");
-      if (qtyInput) qtyInput.value = "";
-
-      showAlert(`บันทึกการจอง RSV-${String(newId).padStart(4, "0")} สำเร็จ`);
-    });
-
-    // 7. ปุ่มรีเซ็ตข้อมูล
-    document.getElementById("resetDataButton")?.addEventListener("click", () => {
-      if (confirm("ต้องการล้างข้อมูลและคืนค่าข้อมูลทดลองหรือไม่?")) {
-        localStorage.removeItem(STORAGE_KEY);
-        data = loadData();
-        selectedCustomerId = 1;
-
-        setDefaultDates();
-        renderAll();
-        showAlert("คืนค่าข้อมูลทดลองเรียบร้อยแล้ว");
-      }
-    });
-
-    // 8. เริ่มต้นการทำงาน LIFF และแสดงผล UI ทั้งหมด
     initLiff();
-    renderAll();
-  });
-</script>
- </body>
+  </script>
+</body>
 </html>
