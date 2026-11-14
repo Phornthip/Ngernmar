@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Holiday Firework | วิธีสั่งซื้อ</title>
+  <title>Holiday Shop | วิธีสั่งซื้อ</title>
 
   <!-- นำเข้า LINE LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -211,6 +211,7 @@
       50% { box-shadow: 0 0 0 10px rgba(255, 215, 111, 0); }
     }
 
+    /* แบนเนอร์ต้อนรับเมื่อเข้ามาจากการ์ดที่แชร์ */
     .welcome {
       margin: 0 auto 20px; max-width: 520px; padding: 14px 18px;
       border-radius: 16px; text-align: center; font-size: 15px;
@@ -286,6 +287,7 @@
 
     .warn { margin-top: 14px; font-size: 13px; color: var(--dim); }
 
+    /* การ์ดชวนแชร์ */
     .share-card { text-align: center; }
     .share-card p { margin: 0 0 16px; color: var(--dim); line-height: 1.6; }
 
@@ -300,6 +302,7 @@
     }
     .bottom-bar .btn { flex: 1; }
 
+    /* แจ้งเตือนลอย */
     .toast {
       position: fixed; left: 50%; bottom: 96px; z-index: 50;
       transform: translateX(-50%) translateY(20px);
@@ -463,6 +466,9 @@
   <div id="toast" class="toast"></div>
 
   <script>
+    /* ===========================================
+       ข้อมูลร้าน แก้ไขได้ที่นี่จุดเดียว
+       =========================================== */
     const SHOP = {
       name: "Holiday Firework",
       lineUrl: "https://lin.ee/rOh1mCa",
@@ -472,24 +478,14 @@
       accountNames: ["ณัฐริกา ศิลปชัย", "กัญญารัตน์ ศิลปชัย"]
     };
 
+    /* LIFF ID เดิมของร้าน */
     const LIFF_ID = "2011773702-rRi1WQNm";
     const LIFF_URL = "https://liff.line.me/" + LIFF_ID;
-    const RETURN_URL = LIFF_URL + "?from=share";
-    const EFFECT_KEY = "holiday-firework-effect";
 
-    const C = {
-      night: "#1a0b2e",
-      night2: "#2b1055",
-      night3: "#0f3443",
-      gold: "#ffd76f",
-      lantern: "#ff9f45",
-      pink: "#ff6b9d",
-      red: "#e63946",
-      cream: "#fff6ec",
-      text: "#fdf6e3",
-      dim: "#c3b6d9",
-      line: "#06c755"
-    };
+    /* ลิงก์ที่ฝังในการ์ด: ใส่ ?from=share เพื่อให้หน้าเว็บรู้ว่ามาจากการ์ด */
+    const RETURN_URL = LIFF_URL + "?from=share";
+
+    const EFFECT_KEY = "holiday-firework-effect";
 
     let liffReady = false;
 
@@ -507,9 +503,11 @@
 
     async function initLiff() {
       if (!isLiffConfigured()) return;
+
       try {
         await liff.init({ liffId: LIFF_ID });
         liffReady = true;
+
         if (liff.isInClient()) {
           document.getElementById("closeLiffButton").classList.remove("hidden");
         }
@@ -518,8 +516,10 @@
       }
     }
 
+    /* แสดงข้อความต้อนรับเมื่อเปิดจากการ์ดที่แชร์ */
     function checkWelcome() {
       const params = new URLSearchParams(window.location.search);
+
       if (params.get("from") === "share") {
         document.getElementById("welcomeBanner").classList.remove("hidden");
         showToast("ยินดีต้อนรับสู่ Holiday Firework 🎆");
@@ -528,169 +528,193 @@
 
     function openLink(type) {
       const url = type === "line" ? SHOP.lineUrl : SHOP.websiteUrl;
+
       if (liffReady && liff.isInClient()) {
         liff.openWindow({ url, external: type === "website" });
         return;
       }
+
       window.open(url, "_blank", "noopener");
     }
 
-    function norenStripe() {
-      const stripes = [];
-      for (let i = 0; i < 10; i++) {
-        stripes.push({
-          type: "box",
-          layout: "vertical",
-          height: "6px",
-          backgroundColor: i % 2 === 0 ? C.red : C.cream,
-          contents: []
-        });
-      }
-      return { type: "box", layout: "horizontal", contents: stripes };
-    }
-
-    function stepRow(number, title, detail) {
-      return {
-        type: "box",
-        layout: "horizontal",
-        spacing: "md",
-        margin: "md",
-        contents: [
-          {
-            type: "box",
-            layout: "vertical",
-            width: "28px",
-            height: "28px",
-            cornerRadius: "14px",
-            backgroundColor: C.gold,
-            justifyContent: "center",
-            alignItems: "center",
-            flex: 0,
-            contents: [
-              { type: "text", text: String(number), weight: "bold", size: "sm", color: C.night2, align: "center" }
-            ]
-          },
-          {
-            type: "box",
-            layout: "vertical",
-            flex: 1,
-            contents: [
-              { type: "text", text: title, weight: "bold", size: "sm", color: C.text },
-              { type: "text", text: detail, size: "xs", color: C.dim, wrap: true }
-            ]
-          }
-        ]
-      };
-    }
-
-    function linkButton(label, url, background, textColor) {
-      return {
-        type: "box",
-        layout: "vertical",
-        cornerRadius: "12px",
-        backgroundColor: background,
-        paddingAll: "12px",
-        margin: "sm",
-        action: { type: "uri", label: label.slice(0, 20), uri: url },
-        contents: [
-          { type: "text", text: label, weight: "bold", size: "sm", color: textColor, align: "center" }
-        ]
-      };
+    /* ===========================================
+       การ์ดแชร์ LINE (แบบเดียวกับการ์ดในโค้ดเดิม)
+       =========================================== */
+    function todayThai() {
+      return new Intl.DateTimeFormat("th-TH", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }).format(new Date());
     }
 
     function buildShareFlex() {
       return {
         type: "flex",
-        altText: "🎆 " + SHOP.name + " วิธีสั่งซื้อสินค้า กดเพื่อดูรายละเอียด",
+        altText: "🎆 " + SHOP.name + " แตะเพื่อดูวิธีสั่งซื้อ",
         contents: {
           type: "bubble",
           size: "mega",
-          styles: {
-            body: { backgroundColor: C.night },
-            footer: { backgroundColor: C.night, separator: true, separatorColor: "#3d2a5c" }
-          },
+
+          /* ส่วนหัว */
           header: {
             type: "box",
             layout: "vertical",
-            paddingAll: "0px",
-            action: { type: "uri", label: "เปิดหน้าวิธีสั่งซื้อ", uri: RETURN_URL },
+            backgroundColor: "#0f172a",
+            paddingAll: "16px",
+            action: { type: "uri", label: "เปิดดูวิธีสั่งซื้อ", uri: RETURN_URL },
             contents: [
-              norenStripe(),
+              {
+                type: "text",
+                text: "🎆 HOLIDAY SHOP",
+                weight: "bold",
+                color: "#38bdf8",
+                size: "sm"
+              },
+              {
+                type: "text",
+                text: SHOP.name,
+                weight: "bold",
+                color: "#ffffff",
+                size: "lg",
+                margin: "xs"
+              },
+              {
+                type: "text",
+                text: "อัปเดต ณ วันที่ " + todayThai(),
+                color: "#94a3b8",
+                size: "xs",
+                margin: "xs"
+              }
+            ]
+          },
+
+          /* กล่องเนื้อหา กดได้ทั้งกล่อง */
+          body: {
+            type: "box",
+            layout: "vertical",
+            paddingAll: "16px",
+            action: { type: "uri", label: "เปิดดูวิธีสั่งซื้อ", uri: RETURN_URL },
+            contents: [
               {
                 type: "box",
                 layout: "vertical",
-                paddingAll: "18px",
-                background: {
-                  type: "linearGradient",
-                  angle: "135deg",
-                  startColor: C.night2,
-                  endColor: C.night3
-                },
+                backgroundColor: "#f8fafc",
+                cornerRadius: "8px",
+                paddingAll: "12px",
                 contents: [
-                  { type: "text", text: "🎆 " + SHOP.name + " 🎇", weight: "bold", size: "lg", color: C.gold },
-                  { type: "text", text: "วิธีสั่งซื้อสินค้า", size: "xl", weight: "bold", color: C.text, margin: "xs" },
                   {
                     type: "box",
-                    layout: "vertical",
-                    margin: "md",
-                    cornerRadius: "20px",
-                    backgroundColor: "#ff9f4533",
-                    borderColor: C.gold,
-                    borderWidth: "1px",
-                    paddingTop: "4px",
-                    paddingBottom: "4px",
-                    paddingStart: "12px",
-                    paddingEnd: "12px",
+                    layout: "horizontal",
                     contents: [
-                      { type: "text", text: "🔔 เว็บรออัปเดตของใหม่", size: "xs", color: C.gold, align: "center" }
+                      {
+                        type: "text",
+                        text: "วิธีสั่งซื้อ",
+                        weight: "bold",
+                        size: "xs",
+                        color: "#64748b",
+                        gravity: "center"
+                      },
+                      {
+                        type: "box",
+                        layout: "vertical",
+                        flex: 0,
+                        backgroundColor: "#f59e0b",
+                        cornerRadius: "4px",
+                        paddingStart: "6px",
+                        paddingEnd: "6px",
+                        paddingTop: "2px",
+                        paddingBottom: "2px",
+                        contents: [
+                          {
+                            type: "text",
+                            text: "🔔 ของใหม่เร็ว ๆ นี้",
+                            size: "xxs",
+                            color: "#ffffff",
+                            weight: "bold"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    type: "text",
+                    text: "เลือก ➜ แคป ➜ ส่งไลน์ ➜ โอน",
+                    weight: "bold",
+                    size: "md",
+                    color: "#0f172a",
+                    margin: "sm",
+                    wrap: true
+                  },
+                  {
+                    type: "text",
+                    text: "สั่งง่ายใน 4 ขั้นตอน พร้อมช่องทางชำระเงิน",
+                    size: "sm",
+                    color: "#334155",
+                    margin: "xs",
+                    wrap: true
+                  },
+                  {
+                    type: "separator",
+                    margin: "sm",
+                    color: "#e2e8f0"
+                  },
+                  {
+                    type: "box",
+                    layout: "horizontal",
+                    margin: "sm",
+                    contents: [
+                      {
+                        type: "text",
+                        text: "🎇 แตะเพื่อดูรายละเอียด",
+                        size: "xs",
+                        color: "#64748b",
+                        flex: 3
+                      },
+                      {
+                        type: "text",
+                        text: "เปิดเลย ›",
+                        size: "xs",
+                        color: "#d97706",
+                        weight: "bold",
+                        align: "end",
+                        flex: 2
+                      }
                     ]
                   }
                 ]
               }
             ]
           },
-          body: {
-            type: "box",
-            layout: "vertical",
-            paddingAll: "18px",
-            contents: [
-              stepRow(1, "เลือกสินค้า", "ดูสินค้าในเว็บของร้าน"),
-              stepRow(2, "แคปหน้าจอ", "แคปสินค้าที่สนใจไว้"),
-              stepRow(3, "ส่งในไลน์", "ส่งรูปให้แอดมินในไลน์ร้าน"),
-              stepRow(4, "โอนและแจ้งสลิป", "ส่งสลิป ชื่อ และที่อยู่จัดส่ง"),
-              {
-                type: "box",
-                layout: "vertical",
-                margin: "xl",
-                paddingAll: "14px",
-                cornerRadius: "14px",
-                backgroundColor: C.night2,
-                borderColor: C.gold,
-                borderWidth: "1px",
-                contents: [
-                  { type: "text", text: "⭐️ " + SHOP.bank + " ⭐️", size: "sm", weight: "bold", color: C.pink, align: "center" },
-                  { type: "text", text: SHOP.accountNumber, size: "xxl", weight: "bold", color: C.gold, align: "center", margin: "sm" },
-                  { type: "text", text: "✅ " + SHOP.accountNames[0] + " ✅", size: "sm", color: C.text, align: "center", margin: "sm" },
-                  { type: "text", text: "หรือ " + SHOP.accountNames[1], size: "xs", color: C.dim, align: "center" }
-                ]
-              },
-              { type: "text", text: "🎆 โอนแล้วแจ้งสลิป ชื่อ ที่อยู่ได้เลยค่ะ 🎇", size: "xs", color: C.lantern, align: "center", wrap: true, margin: "md" }
-            ]
-          },
+
+          /* ปุ่มกลับเข้าเว็บ */
           footer: {
             type: "box",
             layout: "vertical",
-            paddingAll: "14px",
+            paddingAll: "12px",
+            spacing: "sm",
             contents: [
-              linkButton("🎆 เปิดดูวิธีสั่งซื้อ", RETURN_URL, C.gold, C.night2),
-              linkButton("🌐 ดูสินค้าในเว็บร้าน", SHOP.websiteUrl, C.night2, C.gold),
-              linkButton("💬 ทักไลน์สั่งซื้อ", SHOP.lineUrl, C.line, "#ffffff")
+              {
+                type: "button",
+                action: { type: "uri", label: "🎆 เปิดดูวิธีสั่งซื้อ", uri: RETURN_URL },
+                style: "primary",
+                color: "#0284c7",
+                height: "sm"
+              },
+              {
+                type: "button",
+                action: { type: "uri", label: "💬 ทักไลน์ร้าน", uri: SHOP.lineUrl },
+                style: "link",
+                color: "#06c755",
+                height: "sm"
+              }
             ]
           }
         }
       };
     }
 
+    /* ข้อความสำรอง ใช้เมื่อเปิดนอก LIFF หรือส่งการ์ดไม่สำเร็จ */
     function buildShareText() {
       return [
         "🎆 " + SHOP.name + " 🎇",
@@ -719,19 +743,25 @@
           liff.login({ redirectUri: window.location.href });
           return;
         }
+
         try {
           const result = await liff.shareTargetPicker([buildShareFlex()]);
           showToast(result ? "ส่งการ์ดเรียบร้อยแล้ว 🎆" : "ยกเลิกการแชร์");
         } catch (error) {
+          console.error("Flex share error:", error);
+
+          /* ถ้าส่งการ์ดไม่ผ่าน ให้ส่งเป็นข้อความแทน */
           try {
             const result = await liff.shareTargetPicker([{ type: "text", text: buildShareText() }]);
             showToast(result ? "ส่งเป็นข้อความเรียบร้อยแล้ว" : "ยกเลิกการแชร์");
           } catch (fallbackError) {
+            console.error(fallbackError);
             showToast("แชร์ไม่สำเร็จ ลองใหม่อีกครั้ง");
           }
         }
         return;
       }
+
       window.open("https://line.me/R/msg/text/?" + encodeURIComponent(buildShareText()), "_blank");
     }
 
@@ -744,6 +774,7 @@
       }
     }
 
+    /* ===== เชื่อมปุ่ม ===== */
     document.querySelectorAll("[data-link]").forEach(button => {
       button.addEventListener("click", () => openLink(button.dataset.link));
     });
@@ -757,7 +788,10 @@
     });
 
     document.getElementById("requestListButton").addEventListener("click", async () => {
-      await copyText("สวัสดีค่ะ รูปในเว็บไม่โหลด รบกวนส่งรายการสินค้าให้หน่อยค่ะ", "คัดลอกข้อความแล้ว วางในแชตได้เลย");
+      await copyText(
+        "สวัสดีค่ะ รูปในเว็บไม่โหลด รบกวนส่งรายการสินค้าให้หน่อยค่ะ",
+        "คัดลอกข้อความแล้ว วางในแชตได้เลย"
+      );
       openLink("line");
     });
 
@@ -776,6 +810,7 @@
       document.getElementById("effectToggle").textContent = "เปิดเอฟเฟกต์";
     }
 
+    /* เริ่ม LIFF ก่อน แล้วค่อยเช็กว่ามาจากการ์ดหรือไม่ */
     initLiff().then(checkWelcome);
   </script>
 </body>
